@@ -1,0 +1,850 @@
+{% doc %}
+  @prompt
+  Create a before-and-after image comparison section that allows separate images for desktop and mobile devices, with a
+  slider to reveal the after image, The image scales it should not scale it smoothly overlaps and show the difference ,
+  Give padding options as well along with Heading and text area block which would be center aligned and schema color
+  option as well , Wrap the whole section with a div class name ="page-width" , Have a seperate Aspect ratio for mobile
+  and desktop
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+     .section-{{ section.id }}-padding {
+    padding-top: {{ block.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ block.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ block.settings.padding_top }}px;
+      padding-bottom: {{ block.settings.padding_bottom }}px;
+    }
+    .ai-image-comparison-container-{{ ai_gen_id }} {
+      min-width:550px;
+    }
+  }
+
+  .ai-image-comparison-{{ ai_gen_id }} {
+     position: relative;
+    width: 100%;
+    overflow: hidden;
+    max-width: 100%;
+    /* padding: {{ block.settings.padding_top }}px {{ block.settings.padding_right }}px {{ block.settings.padding_bottom }}px {{ block.settings.padding_left }}px; */
+    background-color: {{ block.settings.background_color }};
+  }
+
+  .ai-image-comparison-header-{{ ai_gen_id }} {
+    text-align: {{ block.settings.text_alignment }};
+    margin-bottom:50px;
+  }
+
+  .ai-image-comparison-heading-{{ ai_gen_id }} {
+    color: {{ block.settings.heading_color }};
+    margin-bottom: 28px;
+    margin-top:0;
+    }
+
+  .ai-image-comparison-text-{{ ai_gen_id }} {
+    color: {{ block.settings.text_color }};
+    margin-bottom: 60px;
+    font-size: {{ block.settings.text_size }}px;
+  }
+
+  .ai-image-comparison-container-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    border-radius: {{ block.settings.border_radius }}px;
+    /* min-width: 550px; */
+  }
+
+  .ai-image-comparison-desktop-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+    height: 0;
+    padding-bottom: {{ block.settings.aspect_ratio_desktop }}%;
+  }
+
+  .ai-image-comparison-mobile-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+    height: 0;
+    padding-bottom: {{ block.settings.aspect_ratio_mobile }}%;
+  }
+
+  .ai-image-comparison-before-{{ ai_gen_id }},
+  .ai-image-comparison-after-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;}
+
+  .ai-image-comparison-before-{{ ai_gen_id }} {
+    z-index: 1;
+  }
+
+  .ai-image-comparison-after-{{ ai_gen_id }} {
+    z-index: 2;
+    clip-path: inset(0 50% 0 0);
+  }
+
+  .ai-image-comparison-slider-{{ ai_gen_id }} {
+    position: absolute;
+    z-index: 2;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 4px;
+    background: {{ block.settings.slider_color }};
+    transform: translateX(-50%);
+    cursor: ew-resize;
+  }
+
+  .ai-image-comparison-handle-{{ ai_gen_id }} {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 40px;
+    height: 70px;
+    border-radius: 50px;
+    background: {{ block.settings.slider_color }};
+    transform: translate(-50%, -50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  }
+
+  .ai-image-comparison-handle-{{ ai_gen_id }} svg {
+    width: 24px;
+    height: 24px;
+    fill: {{ block.settings.handle_icon_color }};
+  }
+
+  .ai-image-comparison-labels-{{ ai_gen_id }} {
+    position: absolute;
+    z-index: 3;
+    top: 20px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 20px;box-sizing: border-box;
+    pointer-events: none;
+  }
+
+  .ai-image-comparison-label-{{ ai_gen_id }} {
+    background: {{ block.settings.label_background }};
+    color: {{ block.settings.label_color }};
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: bold;
+  }
+
+  .ai-image-comparison-placeholder-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f4f4f4;}
+
+  .ai-image-comparison-placeholder-{{ ai_gen_id }} svg {
+    width: 50%;
+    height: 50%;
+    opacity: 0.5;
+  }
+
+  .ai-image-comparison-img-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+    .comparison_flex {
+      display: grid;
+      grid-template-columns: 1fr 546px 1fr;
+      align-items: center;
+      gap: 70px;
+      max-width: 90%;
+      margin: auto;
+  }
+  
+  .content_block {
+      display: flex;
+      flex-direction: column;
+      gap: 100px;
+      text-align: center;
+  }
+  
+  .content_block span {
+      max-width: 145px;
+      margin: auto;
+      min-height: 77px;
+      font-family: 'GT America Trial';
+      font-weight: 400;
+      font-size: 18px;
+      line-height: 100%;
+      text-align: center;
+  }
+      .button_center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 55px 0 0;
+}
+
+.button_center a {
+    font-family: Trade Gothic Next LT Pro;
+    font-size: 16px;
+    line-height: 100%;
+    letter-spacing: 0.36px!important;
+    text-align: center;
+    text-transform: uppercase;
+    min-height: 47px;
+}
+
+  @media screen and (max-width: 749px) {
+    .ai-image-comparison-heading-{{ ai_gen_id }} {
+      text-align:center;
+    }
+
+  .comparison_flex {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    max-width: 100%;
+}
+
+.content_block {
+    gap: 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+
+.content_block span {
+    min-height: auto;
+    font-size: 16px;
+}
+
+
+    
+    .ai-image-comparison-header-{{ ai_gen_id }}{
+      text-align:left;
+    }
+    .ai-image-comparison-desktop-{{ ai_gen_id }} {
+      display: none;
+    }
+
+    /* .ai-image-comparison-heading-{{ ai_gen_id }} {
+      font-size: {{ block.settings.heading_size | times: 0.8 }}px;
+    } */
+
+    .ai-image-comparison-text-{{ ai_gen_id }} p{
+      font-size:14px;
+      line-height:18px;
+    }
+
+    .ai-image-comparison-{{ ai_gen_id }} {
+      padding: {{ block.settings.padding_top | times: 0.7 }}px {{ block.settings.padding_right | times: 0.7 }}px {{ block.settings.padding_bottom | times: 0.7 }}px {{ block.settings.padding_left | times: 0.7 }}px;
+    }
+  }
+
+  @media screen and (min-width: 750px) {
+    .ai-image-comparison-mobile-{{ ai_gen_id }} {
+      display: none;
+    }
+  }
+{% endstyle %}
+<div class="color-{{ block.settings.color_scheme_desktop }}">
+  <div class="page-width  section-{{ section.id }}-padding before_after_slider_custom">
+    <image-comparison-{{ ai_gen_id }}
+      class="ai-image-comparison-{{ ai_gen_id }}"
+      {{ block.shopify_attributes }}
+    >
+      <div class="ai-image-comparison-header-{{ ai_gen_id }}">
+        {% if block.settings.heading != blank %}
+          <h2 class="ai-image-comparison-heading-{{ ai_gen_id }} hxxl">{{ block.settings.heading }}</h2>
+        {% endif %}
+
+        {% if block.settings.text != blank %}
+          <div class="ai-image-comparison-text-{{ ai_gen_id }}">{{ block.settings.text }}</div>
+        {% endif %}
+      </div>
+
+       <div class="comparison_flex">
+          <div class="content_block">
+            {%- if block.settings.content_item_one != blank -%}
+                      <span>
+                        {{ block.settings.content_item_one }}
+                      </span>
+                  {%- endif -%}
+                  {%- if block.settings.content_item_two != blank -%}
+                      <span>
+                        {{ block.settings.content_item_two }}
+                      </span>
+                  {%- endif -%}
+          </div>
+      
+      
+          
+        
+
+      <div class="ai-image-comparison-container-{{ ai_gen_id }}">
+        <!-- Desktop Images -->
+        <div class="ai-image-comparison-desktop-{{ ai_gen_id }}">
+          <div class="ai-image-comparison-before-{{ ai_gen_id }}">
+            {% if block.settings.before_image_desktop %}
+              <img
+                src="{{ block.settings.before_image_desktop | image_url: width: 2000 }}"
+                alt="{{ block.settings.before_label | escape }}"
+                loading="lazy"
+                class="ai-image-comparison-img-{{ ai_gen_id }}"
+              >
+            {% else %}
+              <div class="ai-image-comparison-placeholder-{{ ai_gen_id }}">
+                {{ 'image' | placeholder_svg_tag }}
+              </div>
+            {% endif %}
+          </div>
+          <div class="ai-image-comparison-after-{{ ai_gen_id }}">
+            {% if block.settings.after_image_desktop %}
+              <img
+                src="{{ block.settings.after_image_desktop | image_url: width: 2000 }}"
+                alt="{{ block.settings.after_label | escape }}"
+                loading="lazy"
+                class="ai-image-comparison-img-{{ ai_gen_id }}"
+              >
+            {% else %}
+              <div class="ai-image-comparison-placeholder-{{ ai_gen_id }}">
+                {{ 'image' | placeholder_svg_tag }}
+              </div>
+            {% endif %}
+          </div>
+          {% if block.settings.show_labels %}
+            <div class="ai-image-comparison-labels-{{ ai_gen_id }}">
+              <span class="ai-image-comparison-label-{{ ai_gen_id }}">{{ block.settings.before_label }}</span>
+              <span class="ai-image-comparison-label-{{ ai_gen_id }}">{{ block.settings.after_label }}</span>
+            </div>
+          {% endif %}
+          <div class="ai-image-comparison-slider-{{ ai_gen_id }} desktop-slider">
+            <div class="ai-image-comparison-handle-{{ ai_gen_id }}">
+              <!--
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M8.59,16.59L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.59Z"/><path d="M15.41,16.59L10.83,12L15.41,7.41L14,6L8,12L14,18L15.41,16.59Z" transform="rotate(180 12 12)"/>
+                </svg>
+              -->
+
+              <svg xmlns="http://www.w3.org/2000/svg" width="17" height="32" viewBox="0 0 17 32" fill="none">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M1.3099 31.1753C0.975444 31.1753 0.654685 31.0242 0.418188 30.7554C0.181691 30.4865 0.0488281 30.1218 0.0488281 29.7416L0.0488269 2.02281C0.0488268 1.64256 0.181689 1.27789 0.418186 1.00901C0.654683 0.740135 0.975442 0.589081 1.3099 0.589081C1.64436 0.589081 1.96512 0.740135 2.20161 1.00901C2.43811 1.27789 2.57097 1.64256 2.57097 2.02281L2.57097 29.7416C2.57097 30.1218 2.43811 30.4865 2.20161 30.7554C1.96512 31.0242 1.64436 31.1753 1.3099 31.1753ZM8.45598 31.1753C8.12152 31.1753 7.80076 31.0242 7.56427 30.7554C7.32777 30.4865 7.19491 30.1218 7.19491 29.7416L7.19491 2.02281C7.19491 1.64256 7.32777 1.27789 7.56427 1.00901C7.80076 0.740135 8.12152 0.58908 8.45598 0.58908C8.79044 0.58908 9.11119 0.740135 9.34769 1.00901C9.58419 1.27789 9.71705 1.64256 9.71705 2.02281L9.71705 29.7416C9.71705 30.1218 9.58419 30.4865 9.34769 30.7554C9.1112 31.0242 8.79044 31.1753 8.45598 31.1753ZM14.341 29.7416C14.341 30.1218 14.4739 30.4865 14.7103 30.7554C14.9468 31.0242 15.2676 31.1753 15.6021 31.1753C15.9365 31.1753 16.2573 31.0242 16.4938 30.7554C16.7303 30.4865 16.8631 30.1218 16.8631 29.7416L16.8631 2.02281C16.8631 1.64256 16.7303 1.27789 16.4938 1.00901C16.2573 0.740134 15.9365 0.58908 15.6021 0.58908C15.2676 0.58908 14.9468 0.740135 14.7103 1.00901C14.4738 1.27789 14.341 1.64256 14.341 2.02281L14.341 29.7416Z" fill="#340E00"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mobile Images -->
+        <div class="ai-image-comparison-mobile-{{ ai_gen_id }}">
+          <div class="ai-image-comparison-before-{{ ai_gen_id }}">
+            {% if block.settings.before_image_mobile %}
+              <img
+                src="{{ block.settings.before_image_mobile | image_url: width: 1000 }}"
+                alt="{{ block.settings.before_label | escape }}"
+                loading="lazy"
+                class="ai-image-comparison-img-{{ ai_gen_id }}"
+              >
+            {% elsif block.settings.before_image_desktop %}
+              <img
+                src="{{ block.settings.before_image_desktop | image_url: width: 1000 }}"
+                alt="{{ block.settings.before_label | escape }}"
+                loading="lazy"
+                class="ai-image-comparison-img-{{ ai_gen_id }}"
+              >
+            {% else %}
+              <div class="ai-image-comparison-placeholder-{{ ai_gen_id }}">
+                {{ 'image' | placeholder_svg_tag }}
+              </div>
+            {% endif %}
+          </div>
+          <div class="ai-image-comparison-after-{{ ai_gen_id }}">
+            {% if block.settings.after_image_mobile %}
+              <img
+                src="{{ block.settings.after_image_mobile | image_url: width: 1000 }}"
+                alt="{{ block.settings.after_label | escape }}"
+                loading="lazy"
+                class="ai-image-comparison-img-{{ ai_gen_id }}"
+              >
+            {% elsif block.settings.after_image_desktop %}
+              <img
+                src="{{ block.settings.after_image_desktop | image_url: width: 1000 }}"
+                alt="{{ block.settings.after_label | escape }}"
+                loading="lazy"
+                class="ai-image-comparison-img-{{ ai_gen_id }}"
+              >
+            {% else %}
+              <div class="ai-image-comparison-placeholder-{{ ai_gen_id }}">
+                {{ 'image' | placeholder_svg_tag }}
+              </div>
+            {% endif %}
+          </div>
+
+          {% if block.settings.show_labels %}
+            <div class="ai-image-comparison-labels-{{ ai_gen_id }}">
+              <span class="ai-image-comparison-label-{{ ai_gen_id }}">{{ block.settings.before_label }}</span>
+              <span class="ai-image-comparison-label-{{ ai_gen_id }}">{{ block.settings.after_label }}</span>
+            </div>
+          {% endif %}
+
+          <div class="ai-image-comparison-slider-{{ ai_gen_id }} mobile-slider">
+            <div class="ai-image-comparison-handle-{{ ai_gen_id }}">
+              <svg xmlns="http://www.w3.org/2000/svg" width="17" height="32" viewBox="0 0 17 32" fill="none">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M1.3099 31.1753C0.975444 31.1753 0.654685 31.0242 0.418188 30.7554C0.181691 30.4865 0.0488281 30.1218 0.0488281 29.7416L0.0488269 2.02281C0.0488268 1.64256 0.181689 1.27789 0.418186 1.00901C0.654683 0.740135 0.975442 0.589081 1.3099 0.589081C1.64436 0.589081 1.96512 0.740135 2.20161 1.00901C2.43811 1.27789 2.57097 1.64256 2.57097 2.02281L2.57097 29.7416C2.57097 30.1218 2.43811 30.4865 2.20161 30.7554C1.96512 31.0242 1.64436 31.1753 1.3099 31.1753ZM8.45598 31.1753C8.12152 31.1753 7.80076 31.0242 7.56427 30.7554C7.32777 30.4865 7.19491 30.1218 7.19491 29.7416L7.19491 2.02281C7.19491 1.64256 7.32777 1.27789 7.56427 1.00901C7.80076 0.740135 8.12152 0.58908 8.45598 0.58908C8.79044 0.58908 9.11119 0.740135 9.34769 1.00901C9.58419 1.27789 9.71705 1.64256 9.71705 2.02281L9.71705 29.7416C9.71705 30.1218 9.58419 30.4865 9.34769 30.7554C9.1112 31.0242 8.79044 31.1753 8.45598 31.1753ZM14.341 29.7416C14.341 30.1218 14.4739 30.4865 14.7103 30.7554C14.9468 31.0242 15.2676 31.1753 15.6021 31.1753C15.9365 31.1753 16.2573 31.0242 16.4938 30.7554C16.7303 30.4865 16.8631 30.1218 16.8631 29.7416L16.8631 2.02281C16.8631 1.64256 16.7303 1.27789 16.4938 1.00901C16.2573 0.740134 15.9365 0.58908 15.6021 0.58908C15.2676 0.58908 14.9468 0.740135 14.7103 1.00901C14.4738 1.27789 14.341 1.64256 14.341 2.02281L14.341 29.7416Z" fill="#340E00"/>
+              </svg>
+              <!--
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M8.59,16.59L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.59Z"/><path d="M15.41,16.59L10.83,12L15.41,7.41L14,6L8,12L14,18L15.41,16.59Z" transform="rotate(180 12 12)"/>
+                </svg>
+              -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+                    <div class="content_block">
+            {%- if block.settings.content_item_three != blank -%}
+                      <span>
+                        {{ block.settings.content_item_three }}
+                      </span>
+                  {%- endif -%}
+                  {%- if block.settings.content_item_four != blank -%}
+                      <span>
+                        {{ block.settings.content_item_four }}
+                      </span>
+                  {%- endif -%}
+          </div>
+        </div>
+
+                  
+    </image-comparison-{{ ai_gen_id }}>
+    <!--  -->
+
+                  <div class="button_center">
+                    {%- if block.settings.button_label != blank -%}
+            <a href="{{ block.settings.button_link }}" class="
+                          size-style
+                          button
+                        ">
+                        {{- block.settings.button_label | escape -}}
+                      </a>
+          {%- endif -%}
+                  </div>
+  
+                  
+                  
+  </div>
+</div>
+<script>
+  (function() {
+    class ImageComparison{{ai_gen_id}} extends HTMLElement {
+      constructor() {
+        super();
+        this.desktopContainer = this.querySelector('.ai-image-comparison-desktop-{{ ai_gen_id }}');
+        this.mobileContainer = this.querySelector('.ai-image-comparison-mobile-{{ ai_gen_id }}');
+        this.desktopSlider = this.querySelector('.desktop-slider');
+        this.mobileSlider = this.querySelector('.mobile-slider');
+        this.desktopAfterImage = this.desktopContainer.querySelector('.ai-image-comparison-after-{{ ai_gen_id }}');
+        this.mobileAfterImage = this.mobileContainer.querySelector('.ai-image-comparison-after-{{ ai_gen_id }}');
+        this.isDragging = false;
+        this.initialPosition = {{ block.settings.initial_position }};
+        this.activeSlider = null;
+        this.activeContainer = null;
+        this.activeAfterImage = null;}
+
+      connectedCallback() {
+        this.setupEventListeners();
+        this.setInitialPosition();
+      }
+
+      setupEventListeners() {
+        // Desktop slider events
+        this.desktopSlider.addEventListener('mousedown', (e) => this.startDragging(e, this.desktopSlider, this.desktopContainer, this.desktopAfterImage));
+        this.desktopSlider.addEventListener('touchstart', (e) => this.startDragging(e, this.desktopSlider, this.desktopContainer, this.desktopAfterImage), { passive: true });
+        
+        // Mobile slider events
+        this.mobileSlider.addEventListener('mousedown', (e) => this.startDragging(e, this.mobileSlider, this.mobileContainer, this.mobileAfterImage));
+        this.mobileSlider.addEventListener('touchstart', (e) => this.startDragging(e, this.mobileSlider, this.mobileContainer, this.mobileAfterImage), { passive: true });
+        // Global mouse/touch events
+        document.addEventListener('mousemove', this.drag.bind(this));
+        document.addEventListener('touchmove', this.drag.bind(this), { passive: false });
+        document.addEventListener('mouseup', this.stopDragging.bind(this));
+        document.addEventListener('touchend', this.stopDragging.bind(this));
+
+        // Click/tap on containers to move slider
+        this.desktopContainer.addEventListener('click', (e) => this.moveSliderOnClick(e, this.desktopSlider, this.desktopContainer, this.desktopAfterImage));
+        this.mobileContainer.addEventListener('click', (e) => this.moveSliderOnClick(e, this.mobileSlider, this.mobileContainer, this.mobileAfterImage));
+        
+        // Resize event
+        window.addEventListener('resize', this.handleResize.bind(this));
+      }
+
+      setInitialPosition() {
+        // Set initial position for both sliders
+        this.moveSliderTo(this.desktopSlider, this.desktopAfterImage, this.initialPosition);
+        this.moveSliderTo(this.mobileSlider, this.mobileAfterImage, this.initialPosition);
+      }
+
+      startDragging(e, slider, container, afterImage) {
+        e.preventDefault();
+        this.isDragging = true;
+        this.activeSlider = slider;
+        this.activeContainer = container;
+        this.activeAfterImage = afterImage;
+        slider.style.transition = 'none';}
+
+      drag(e) {
+        if (!this.isDragging || !this.activeContainer || !this.activeSlider || !this.activeAfterImage) return;
+        e.preventDefault();
+        
+        const containerRect = this.activeContainer.getBoundingClientRect();
+        const containerWidth = containerRect.width;
+        
+        let clientX;
+        if (e.type === 'touchmove') {
+          clientX = e.touches[0].clientX;
+        } else {
+          clientX = e.clientX;
+        }
+        
+        let position = ((clientX - containerRect.left) / containerWidth) * 100;
+        position = Math.min(Math.max(position, 0), 100);
+        
+        this.moveSliderTo(this.activeSlider, this.activeAfterImage, position);
+      }
+
+      moveSliderOnClick(e, slider, container, afterImage) {
+        if (e.target === slider || e.target.closest('.ai-image-comparison-slider-{{ ai_gen_id }}')) {
+          return;
+        }
+        
+        const containerRect = container.getBoundingClientRect();
+        const containerWidth = containerRect.width;
+        const position = ((e.clientX - containerRect.left) / containerWidth) * 100;
+        
+        this.moveSliderTo(slider, afterImage, position);
+      }
+
+      moveSliderTo(slider, afterImage, position) {
+        slider.style.left = `${position}%`;
+        afterImage.style.clipPath = `inset(0 ${100 - position}% 0 0)`;
+      }
+
+      stopDragging() {
+        this.isDragging = false;
+        if (this.activeSlider) {
+          this.activeSlider.style.transition ='left 0.3s ease';
+        }
+        this.activeSlider = null;
+        this.activeContainer = null;
+        this.activeAfterImage = null;
+      }
+
+      handleResize() {
+        // Maintain the same percentage position on resize for both sliders
+        const desktopPosition = parseFloat(this.desktopSlider.style.left) || this.initialPosition;
+        const mobilePosition = parseFloat(this.mobileSlider.style.left) || this.initialPosition;
+        
+        this.moveSliderTo(this.desktopSlider, this.desktopAfterImage, desktopPosition);
+        this.moveSliderTo(this.mobileSlider, this.mobileAfterImage, mobilePosition);
+      }
+    }
+
+    customElements.define('image-comparison-{{ ai_gen_id }}', ImageComparison{{ai_gen_id}});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Before After Comparison",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+      {
+            "type": "color_scheme",
+            "id": "color_scheme_desktop",
+            "label": "Desktop Color Scheme",
+            "default": "scheme-1"
+        },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Before & After"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Text",
+      "default": "<p>See the difference with our product. Drag the slider to reveal the transformation.</p>"
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "Text alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "header",
+      "content": "Desktop Images"
+    },
+    {
+      "type": "image_picker",
+      "id": "before_image_desktop",
+      "label": "Before image (desktop)"
+    },
+    {
+      "type": "image_picker",
+      "id": "after_image_desktop",
+      "label": "After image (desktop)"
+    },
+    {
+      "type": "range",
+      "id": "aspect_ratio_desktop",
+      "min": 30,
+      "max": 150,
+      "step": 5,
+      "unit": "%",
+      "label": "Desktop aspect ratio",
+      "default": 75,
+      "info": "Sets the height relative to the width (e.g., 75% means height is 75% of width)"
+    },
+    {
+      "type": "header",
+      "content": "Mobile Images"
+    },
+    {
+      "type": "paragraph",
+      "content": "If not set, desktop images will be used on mobile"
+    },
+    {
+      "type": "image_picker",
+      "id": "before_image_mobile",
+      "label": "Before image (mobile)"
+    },
+    {
+      "type": "image_picker",
+      "id": "after_image_mobile",
+      "label": "After image (mobile)"
+    },
+    {
+      "type": "range",
+      "id": "aspect_ratio_mobile",
+      "min": 30,
+      "max": 200,
+      "step": 5,
+      "unit": "%",
+      "label": "Mobile aspect ratio",
+      "default": 100,
+      "info": "Sets the height relative to the width (e.g., 100% means height equals width)"
+    },
+    {
+      "type": "header",
+      "content": "Labels"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_labels",
+      "label": "Show labels",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "before_label",
+      "label": "Before label",
+      "default": "Before"
+    },
+    {
+      "type": "text",
+      "id": "after_label",
+      "label": "After label",
+      "default": "After"
+    },
+    {
+      "type": "color",
+      "id": "label_background",
+      "label": "Label background",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "label_color",
+      "label": "Label text color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "header",
+      "content": "Slider"
+    },
+    {
+      "type": "range",
+      "id": "initial_position",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "label": "Initial slider position",
+      "default": 50
+    },
+    {
+      "type": "color",
+      "id": "slider_color",
+      "label": "Slider color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "handle_icon_color",
+      "label": "Handle icon color",
+      "default": "#000000"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Border radius",
+      "default": 8
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#333333"
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+
+    {
+      "type": "range",
+      "id": "text_size",
+      "min": 12,
+      "max": 28,
+      "step": 1,
+      "unit": "px",
+      "label": "Text size",
+      "default": 16
+    },
+     {
+      "type": "header",
+      "content": "Content Points"
+    },
+     {
+      "type": "text",
+      "id": "content_item_one",
+      "label": "Content Item 1",
+      "default": "25,000+ Stitches Per Piece"
+    },
+    {
+      "type": "text",
+      "id": "content_item_two",
+      "label": "Content Item 2",
+      "default": "Drawn by Real Artists in Austin, TX"
+    },
+    {
+      "type": "text",
+      "id": "content_item_three",
+      "label": "Content Item 3",
+      "default": "Stitched into Luxury Apparel & Accessories"
+    },
+    {
+      "type": "text",
+      "id": "content_item_four",
+      "label": "Content Item 4",
+      "default": "Loved and Worn by Thousands of Pup Parents"
+    },
+     {
+            "type": "text",
+            "id": "button_label",
+            "label": "Button label"
+            
+        },
+        {
+            "type": "url",
+            "id": "button_link",
+            "label": "Button link"
+        },
+    
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+        {
+            "type": "range",
+            "id": "padding_top",
+            "min": 0,
+            "max": 100,
+            "step": 4,
+            "unit": "px",
+            "label": "Padding Top",
+            "default": 36
+        },
+        {
+            "type": "range",
+            "id": "padding_bottom",
+            "min": 0,
+            "max": 100,
+            "step": 4,
+            "unit": "px",
+            "label": "Padding Bottom",
+            "default": 36
+        }
+  ],
+  "presets": [
+    {
+      "name": "Before After Comparison"
+    }
+  ]
+}
+{% endschema %}

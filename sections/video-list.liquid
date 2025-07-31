@@ -1,0 +1,598 @@
+{% comment %}
+  Auto-Playing Video Section
+  Cycles through multiple videos with 5-second intervals
+{% endcomment %}
+
+<div class="video-carousel-section" data-section-id="{{ section.id }}">
+  {% if section.settings.section_title != blank %}
+    <div class="section-header">
+      <h2>{{ section.settings.section_title }}</h2>
+    </div>
+  {% endif %}
+  
+  <div class="video-carousel-container">
+    {% assign video_count = 0 %}
+    {% for block in section.blocks limit: 5 %}
+      {% if block.type == 'video' and block.settings.video %}
+        {% assign video_count = video_count | plus: 1 %}
+      {% endif %}
+    {% endfor %}
+    
+    <div class="video-grid" data-video-count="{{ video_count }}">
+      {% for block in section.blocks limit: 5 %}
+        {% if block.type == 'video' and block.settings.video %}
+          <div class="video-item" 
+               data-block-id="{{ block.id }}" 
+               data-video-index="{{ forloop.index0 }}">
+            
+            <div class="video-wrapper">
+              {{ block.settings.video | video_tag: image_size: '2500x', autoplay: false, loop: false, muted: true, controls: false, class: 'carousel-video', playsinline: true }}
+              
+              
+              <!-- Custom Play/Pause Button -->
+              <div class="video-controls">
+                <button class="play-pause-btn" aria-label="Play/Pause video">
+                  <svg class="play-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M8 5V19L19 12L8 5Z" fill="currentColor"/>
+                  </svg>
+                  <svg class="pause-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="display: none;">
+                    <path d="M6 4H10V20H6V4ZM14 4H18V20H14V4Z" fill="currentColor"/>
+                  </svg>
+                </button>
+              </div>
+              
+              <!-- Active Video Indicator -->
+              <div class="active-indicator" style="display: none;"></div>
+              
+              {% if block.settings.video_title %}
+                <div class="video-title">
+                  <h3>{{ block.settings.video_title }}</h3>
+                </div>
+              {% endif %}
+            </div>
+
+            <!--  -->
+            {%- if block.settings.insta_handle != blank -%}
+                <div class="insta_item">
+
+                  {% if block.settings.insta_image != blank %} 
+                                    <img src="{{ block.settings.insta_image | image_url }}" 
+                                                alt="{{ block.settings.insta_image.alt }}" 
+                                                width="{{block.settings.insta_image.width }}"
+                                                height="{{ block.settings.insta_image.height }}"
+                                                class="img-fluid"
+                                    />  
+                  {% endif %}
+                    <span>{{ block.settings.insta_handle }}</span>
+                  
+
+                  {% if block.settings.insta_veririfed %}
+                  <svg aria-label="Verified" class="x1lliihq x1n2onr6" fill="rgb(0, 149, 246)" height="12" role="img" viewBox="0 0 40 40" width="12"><path d="M19.998 3.094 14.638 0l-2.972 5.15H5.432v6.354L0 14.64 3.094 20 0 25.359l5.432 3.137v5.905h5.975L14.638 40l5.36-3.094L25.358 40l3.232-5.6h6.162v-6.01L40 25.359 36.905 20 40 14.641l-5.248-3.03v-6.46h-6.419L25.358 0l-5.36 3.094Zm7.415 11.225 2.254 2.287-11.43 11.5-6.835-6.93 2.244-2.258 4.587 4.581 9.18-9.18Z" fill-rule="evenodd"></path></svg>
+                  {% endif %}
+              
+                </div>
+            {%- endif -%}
+          
+            <!--  -->
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<style>
+  .video-carousel-section {
+    position: relative;
+    width: 100%;
+    /* max-width: 1200px; */
+    margin: 0 auto;
+    padding: 60px 0 80px;
+    background: rgba(193, 166, 137, 0.47);
+  }
+  
+  .section-header {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+  
+  .section-header h2 {
+    font-size: 2rem;
+    font-weight: bold;
+    color: rgba(0, 0, 0, 1);
+    margin: 0;
+  }
+  
+  .video-carousel-container {
+    position: relative;
+    width: 100%;
+  }
+  
+  .video-grid {
+    display: flex;
+    gap: 25px;
+    justify-content: center;
+    flex-wrap: wrap;
+    align-items: flex-start;
+  }
+  
+  /* Responsive grid based on video count */
+  .video-grid[data-video-count="1"] .video-item {
+    width: 100%;
+    max-width: 400px;
+  }
+  
+  .video-grid[data-video-count="2"] .video-item {
+    width: calc(50% - 7.5px);
+    max-width: 350px;
+  }
+  
+  .video-grid[data-video-count="3"] .video-item {
+    width: calc(33.333% - 10px);
+    max-width: 280px;
+  }
+  
+  .video-grid[data-video-count="4"] .video-item {
+    width: calc(25% - 11.25px);
+    max-width: 250px;
+  }
+  
+  .video-grid[data-video-count="5"] .video-item {
+    width: calc(20% - 12px);
+    max-width: 245px;
+  }
+  
+  .video-item {
+    position: relative;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    /* box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease; */
+  }
+  
+  /* .video-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  } */
+  
+  .video-wrapper {
+    position: relative;
+    width: 100%;
+    height: 0;
+    padding-bottom: 133.33%; /* 3:4 Aspect Ratio (mobile video style) */
+    overflow: hidden;
+  }
+  
+  .carousel-video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .video-controls {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  
+  .video-item:hover .video-controls {
+    opacity: 1;
+  }
+  
+  .play-pause-btn {
+    background: rgba(255, 255, 255, 0.9);
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #333;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+  }
+  
+  .play-pause-btn:hover {
+    background: rgba(255, 255, 255, 1);
+    transform: scale(1.1);
+  }
+  
+  .active-indicator {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 8px;
+    height: 8px;
+    background: #ff4444;
+    border-radius: 50%;
+    border: 2px solid white;
+    z-index: 15;
+    animation: pulse 2s infinite;
+  }
+  
+  @keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+  }
+  
+  .video-title {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    color: white;
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+    padding: 20px 15px 15px;
+    border-radius: 0 0 15px 15px;
+  }
+  
+  .video-title h3 {
+    margin: 0;
+    font-size: 0.9em;
+    font-weight: 600;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  }
+
+  .insta_item {
+    display: flex;
+    align-items: center;
+    background: transparent;
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    gap: 10px;
+    }
+    
+    .insta_item img {
+        max-width: 30px;
+        max-height: 30px;
+        border-radius: 50px;
+    }
+    
+    .insta_item span {
+        color: white;
+        font-weight: 400;
+    }
+
+  @media all and (min-width:1200px){
+    .video-wrapper {
+          padding-bottom: 213.33%;
+    }
+  }
+  /* Mobile responsive */
+  @media (max-width: 768px) {
+    .video-grid[data-video-count="3"] .video-item,
+    .video-grid[data-video-count="4"] .video-item,
+    .video-grid[data-video-count="5"] .video-item {
+      width: calc(50% - 7.5px);
+      max-width: none;
+    }
+    .video-grid {
+        flex-wrap: nowrap;
+        overflow: scroll;
+        gap: 20px;
+        justify-content: flex-start;
+    }
+    
+    .video-grid .video-item {
+        min-width: 85%!important;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .video-carousel-section {
+      padding: 60px 15px;
+    }
+    
+    .video-grid .video-item {
+      width: 100% !important;
+      max-width: none !important;
+    }
+    
+    /* .section-header h2 {
+      font-size: 1.5rem;
+    } */
+    
+    .video-wrapper {
+              padding-bottom: 145%;
+      /* padding-bottom: 75%;  */
+      /* 4:3 on mobile for better viewing */
+    }
+  }
+  
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const section = document.querySelector('[data-section-id="{{ section.id }}"]');
+  if (!section) return;
+  
+  const videoItems = section.querySelectorAll('.video-item');
+  const videos = section.querySelectorAll('.carousel-video');
+  
+  let currentVideoIndex = 0;
+  let autoPlayInterval = null;
+  let userInteracted = false;
+  let isTransitioning = false;
+  
+  // Initialize videos
+  function initializeVideos() {
+    videos.forEach((video, index) => {
+      const videoItem = videoItems[index];
+      const playPauseBtn = videoItem.querySelector('.play-pause-btn');
+      const playIcon = playPauseBtn.querySelector('.play-icon');
+      const pauseIcon = playPauseBtn.querySelector('.pause-icon');
+      const activeIndicator = videoItem.querySelector('.active-indicator');
+      
+      // Add event listeners for user interaction
+      video.addEventListener('click', function() {
+        handlePlayPause(video, playIcon, pauseIcon);
+        handleUserInteraction();
+      });
+      
+      playPauseBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        handlePlayPause(video, playIcon, pauseIcon);
+        handleUserInteraction();
+      });
+      
+      // Update play/pause button and indicator based on video state
+      video.addEventListener('play', function() {
+        playIcon.style.display = 'none';
+        pauseIcon.style.display = 'block';
+        activeIndicator.style.display = 'block';
+        
+        // Hide other video indicators
+        videos.forEach((otherVideo, otherIndex) => {
+          if (otherIndex !== index) {
+            const otherIndicator = videoItems[otherIndex].querySelector('.active-indicator');
+            otherIndicator.style.display = 'none';
+          }
+        });
+      });
+      
+      video.addEventListener('pause', function() {
+        playIcon.style.display = 'block';
+        pauseIcon.style.display = 'none';
+        activeIndicator.style.display = 'none';
+      });
+      
+      video.addEventListener('ended', function() {
+        playIcon.style.display = 'block';
+        pauseIcon.style.display = 'none';
+        activeIndicator.style.display = 'none';
+        
+        // Auto-advance to next video if not user controlled
+        if (!userInteracted && videos.length > 1) {
+          setTimeout(() => {
+            const nextIndex = (currentVideoIndex + 1) % videos.length;
+            playVideo(nextIndex);
+          }, 500);
+        }
+      });
+      
+      // Preload first few videos
+      if (index < 2) {
+        video.load();
+      }
+    });
+  }
+  
+  // Handle play/pause functionality
+  function handlePlayPause(video, playIcon, pauseIcon) {
+    if (video.paused) {
+      // Pause all other videos first
+      videos.forEach((otherVideo, otherIndex) => {
+        if (otherVideo !== video && !otherVideo.paused) {
+          otherVideo.pause();
+        }
+      });
+      
+      video.play().catch(console.error);
+    } else {
+      video.pause();
+    }
+  }
+  
+  // Handle user interaction - stops auto-play
+  function handleUserInteraction() {
+    userInteracted = true;
+    clearInterval(autoPlayInterval);
+    autoPlayInterval = null;
+  }
+  
+  // Play specific video
+  function playVideo(index) {
+    if (isTransitioning || index < 0 || index >= videos.length) return;
+    
+    isTransitioning = true;
+    
+    // Pause current video
+    const currentVideo = videos[currentVideoIndex];
+    if (currentVideo && !currentVideo.paused) {
+      currentVideo.pause();
+    }
+    
+    // Update current index
+    currentVideoIndex = index;
+    
+    // Play new video
+    const newVideo = videos[currentVideoIndex];
+    if (newVideo) {
+      // Preload if needed
+      if (newVideo.readyState < 2) {
+        newVideo.load();
+      }
+      
+      newVideo.play().catch(console.error);
+    }
+    
+    isTransitioning = false;
+  }
+  
+  // Start auto-play cycle
+  function startAutoPlay() {
+    if (userInteracted || autoPlayInterval || videos.length <= 1) return;
+    
+    autoPlayInterval = setInterval(function() {
+      if (userInteracted) {
+        clearInterval(autoPlayInterval);
+        return;
+      }
+      
+      // Check if current video is still playing
+      const currentVideo = videos[currentVideoIndex];
+      if (currentVideo && !currentVideo.paused) {
+        return; // Let the video continue playing
+      }
+      
+      const nextIndex = (currentVideoIndex + 1) % videos.length;
+      playVideo(nextIndex);
+    }, 5000); // 5 seconds
+  }
+  
+  // Initialize everything
+  if (videos.length > 0) {
+    initializeVideos();
+    
+    // Start first video automatically
+    const firstVideo = videos[0];
+    if (firstVideo) {
+      firstVideo.play().then(() => {
+        currentVideoIndex = 0;
+        if (videos.length > 1) {
+          startAutoPlay();
+        }
+      }).catch(console.error);
+    }
+  }
+  
+  // Handle visibility change (pause when tab is not active)
+  document.addEventListener('visibilitychange', function() {
+    if (document.hidden) {
+      videos.forEach(video => {
+        if (!video.paused) {
+          video.pause();
+        }
+      });
+      clearInterval(autoPlayInterval);
+    } else if (!userInteracted && videos.length > 1) {
+      startAutoPlay();
+    }
+  });
+  
+  // Handle intersection observer for better performance
+  if ('IntersectionObserver' in window) {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) {
+          // Pause videos when section is not visible
+          videos.forEach(video => {
+            if (!video.paused) {
+              video.pause();
+            }
+          });
+          clearInterval(autoPlayInterval);
+        } else if (!userInteracted && videos.length > 1) {
+          // Resume auto-play when section becomes visible
+          setTimeout(() => {
+            if (!userInteracted) {
+              startAutoPlay();
+            }
+          }, 1000);
+        }
+      });
+    }, { threshold: 0.1 });
+    
+    observer.observe(section);
+  }
+});
+</script>
+
+{% schema %}
+{
+  "name": "Video List",
+  "tag": "section",
+  "class": "video-carousel-section-wrapper",
+  "max_blocks": 5,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Video Carousel Settings"
+    },
+    {
+      "type": "text",
+      "id": "section_title",
+      "label": "Section Title",
+      "default": "Featured Videos"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "video",
+      "name": "Video",
+      "settings": [
+        {
+          "type": "video",
+          "id": "video",
+          "label": "Video File",
+          "info": "Upload a video file. MP4 format recommended."
+        },
+        {
+          "type": "text",
+          "id": "video_title",
+          "label": "Video Title",
+          "info": "Optional title that appears over the video"
+        },
+         {
+            "type": "header",
+            "content": "Insta details"
+        },
+         {
+                    "type": "image_picker",
+                    "id": "insta_image",
+                    "label": "Insta Image"           
+          },
+         {
+          "type": "text",
+          "id": "insta_handle",
+          "label": "Insta Handle"
+        },
+         {
+            "type": "checkbox",
+            "id": "insta_veririfed",
+            "default": false,
+            "label": "Insta Verified"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Video List"
+    }
+  ]
+}
+{% endschema %}

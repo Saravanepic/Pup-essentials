@@ -1,0 +1,34 @@
+{% assign total_orders = shop.orders_count | default: 0 %}
+{% comment %}
+  total_orders : {{ total_orders }}
+{% endcomment %}
+
+<div class="delivery-estimate">
+  {% if total_orders < 100 %}
+    Estimated delivery: 2 weeks
+  {% elsif total_orders >= 100 and total_orders <= 500 %}
+    Estimated delivery: 3 weeks
+  {% else %}
+    Estimated delivery: 4+ weeks
+  {% endif %}
+</div>
+<style>
+  .delivery-estimate {
+    font-family: 'Trade Gothic Next LT Pro';
+    font-size: 16px;
+    line-height: 21px;
+    text-transform: uppercase;
+  }
+</style>
+
+{% schema %}
+  {
+    "name": "Delivery Estimate",
+    "settings": [],
+    "presets": [
+      {
+        "name": "Delivery Estimate"
+      }
+    ]
+  }
+{% endschema %}

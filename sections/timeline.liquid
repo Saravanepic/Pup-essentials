@@ -1,0 +1,944 @@
+{% comment %}
+Timeline Section for Shopify - Tightly Spaced Design
+File: sections/timeline.liquid
+{% endcomment %}
+
+<div class="timeline-section" style="
+  --primary-color: {{ section.settings.primary_color }};
+  --secondary-color: {{ section.settings.secondary_color }};
+  --text-color: {{ section.settings.text_color }};
+  --background-color: {{ section.settings.background_color }};
+">
+  <div class="timeline-container">
+    {% if section.settings.section_title != blank %}
+      <div class="timeline-header">
+        <h2 class="timeline-title">{{ section.settings.section_title }}</h2>
+        {% if section.settings.section_subtitle != blank %}
+          <div class="timeline-subtitle">{{ section.settings.section_subtitle }}</div>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    <div class="timeline-wrapper">
+      <div class="timeline-line"></div>
+      
+      {% for block in section.blocks %}
+        <div class="timeline-item {{ block.settings.alignment }} timeline-item-{{ forloop.index }}" 
+             data-vertical-offset="{{ block.settings.vertical_offset | default: 0 }}"
+             {{ block.shopify_attributes }}>
+          <div class="timeline-dot"></div>
+          <div class="timeline-connector"></div>
+          
+          <div class="timeline-content images-{{ block.settings.position_style }}">
+            <div class="timeline-text-cont">
+              {% if block.settings.year != blank %}
+                <div class="timeline-year">{{ block.settings.year }}</div>
+              {% endif %}
+              
+              {% if block.settings.title != blank %}
+                <div class="timeline-item-title">{{ block.settings.title }}</div>
+              {% endif %}
+              
+              {% if block.settings.description != blank %}
+                <div class="timeline-description">
+                  {{ block.settings.description }}
+                </div>
+              {% endif %}
+              
+              {% if block.settings.highlight_text != blank %}
+                <div class="timeline-highlight">
+                  {{ block.settings.highlight_text }}
+                </div>
+              {% endif %}
+            </div>
+            
+            {% assign image_position = block.settings.image_position %}
+            {% if block.settings.image != blank or block.settings.image_2 != blank %}
+              <div class="timeline-images {{ image_position }}">
+                {% if block.settings.image != blank %}
+                  <div class="timeline-image {{ block.settings.image_size }}">
+                    <img src="{{ block.settings.image | image_url }}" 
+                         alt="{{ block.settings.image.alt | default: block.settings.title }}"
+                         loading="lazy">
+                  </div>
+                {% endif %}
+                
+                {% if block.settings.image_2 != blank %}
+                  <div class="timeline-image {{ block.settings.image_size }}">
+                    <img src="{{ block.settings.image_2 | image_url }}" 
+                         alt="{{ block.settings.image_2.alt | default: block.settings.title }}"
+                         loading="lazy">
+                  </div>
+                {% endif %}
+
+                {% if block.settings.image_3 != blank %}
+                  <div class="timeline-image {{ block.settings.image_size }}">
+                    <img src="{{ block.settings.image_3 | image_url }}" 
+                         alt="{{ block.settings.image_3.alt | default: block.settings.title }}"
+                         loading="lazy">
+                  </div>
+                {% endif %}
+              
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+
+       <div class="button_center">
+                    {%- if section.settings.button_label != blank -%}
+            <a href="{{ section.settings.button_link }}" class="
+                          size-style
+                          button
+                        ">
+                        {{- section.settings.button_label | escape -}}
+                      </a>
+          {%- endif -%}
+                  </div>
+    
+    {% if section.settings.bottom_text != blank %}
+      <div class="timeline-footer">
+        <p class="timeline-footer-text">{{ section.settings.bottom_text }}</p>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+<style>
+
+  @media all and (min-width:1200px){
+    .timeline-item.left .timeline-content.images-side {
+      gap: 10px;
+    }
+  }
+  .button_center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 45px 0 0;
+}
+  .button_center a {
+    font-family: Trade Gothic Next LT Pro;
+    font-size: 16px;
+    line-height: 100%;
+    letter-spacing: 0.36px !important;
+    text-align: center;
+    text-transform: uppercase;
+    min-height: 47px;
+}
+.timeline-section {
+  padding: 80px 0;
+  background-color: var(--background-color, #f8f8f8);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  overflow-x: hidden;
+}
+
+.timeline-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 40px;
+}
+
+.timeline-header {
+  text-align: center;
+  margin-bottom: 10px;
+  opacity: 0;
+  transform: translateY(30px);
+  animation: fadeInUp 0.8s ease-out forwards;
+  z-index:2;
+}
+
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.timeline-title {
+  font-size: 3em;
+  font-weight: bold;
+  color: var(--text-color, #333);
+  margin: 0 0 20px 0;
+  letter-spacing: -0.02em;
+}
+
+.timeline-subtitle {
+  background-color: var(--primary-color);
+  color: white;
+  padding: 6px 26px;
+  /* border-radius: 25px; */
+  display: inline-block;
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0;
+  margin: 0;
+      z-index: 2;
+    position: relative;
+}
+
+.timeline-wrapper {
+  position: relative;
+  max-width: 100%;
+  margin: 0 auto;
+  min-height: 800px; /* Ensure minimum height for tight spacing */
+}
+
+.timeline-line {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: linear-gradient(to bottom, 
+    var(--primary-color, #333) 0%, 
+    var(--primary-color, #333) var(--line-progress, 0%), 
+    #ddd var(--line-progress, 0%), 
+    #ddd 100%);
+  transform: translateX(-50%);
+  z-index: 1;
+  transition: all 0.3s ease;
+}
+
+.timeline-item {
+  position: absolute; /* Changed from relative to absolute for precise positioning */
+  display: flex;
+  align-items: flex-start; /* Changed from center to flex-start */
+  z-index: 2;
+  opacity: 0;
+  transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  width: 50%; /* Set width to 50% for left/right positioning */
+  padding: 15px 0; /* Reduced padding for tighter spacing */
+}
+
+/* Position items based on their index and custom offset */
+/* .timeline-item:nth-child(1) { top: 0px; }
+.timeline-item:nth-child(2) { top: 120px; }
+.timeline-item:nth-child(3) { top: 180px; }
+.timeline-item:nth-child(4) { top: 320px; }
+.timeline-item:nth-child(5) { top: 380px; }
+.timeline-item:nth-child(6) { top: 500px; }
+.timeline-item:nth-child(7) { top: 620px; }
+.timeline-item:nth-child(8) { top: 680px; }
+.timeline-item:nth-child(9) { top: 800px; }
+.timeline-item:nth-child(10) { top: 920px; }
+.timeline-item:nth-child(11) { top: 980px; }
+.timeline-item:nth-child(12) { top: 1100px; }
+  .timeline-item:nth-child(13) { top: 1150px; }
+.timeline-item:nth-child(14) { top: 1250px; }
+  .timeline-item:nth-child(15) { top: 1350px; }
+.timeline-item:nth-child(16) { top: 1450px; }
+  .timeline-item:nth-child(17) { top: 1550px; }
+  .timeline-item:nth-child(18) { top: 1650px; }
+  .timeline-item:nth-child(19) { top: 1750px; } */
+
+/* Apply custom vertical offsets */
+.timeline-item[data-vertical-offset="50"] { transform: translateY(50px); }
+.timeline-item[data-vertical-offset="30"] { transform: translateY(30px); }
+.timeline-item[data-vertical-offset="-30"] { transform: translateY(-30px); }
+.timeline-item[data-vertical-offset="-50"] { transform: translateY(-50px); }
+
+.timeline-item.left {
+  left: 0;
+  justify-content: flex-end;
+  text-align: right;
+  transform: translateX(-100px);
+}
+
+.timeline-item.right {
+  right: 0;
+  justify-content: flex-start;
+  text-align: left;
+  transform: translateX(100px);
+}
+
+.timeline-item.animate-in {
+  opacity: 1;
+}
+
+.timeline-item.left.animate-in {
+  transform: translateX(0);
+}
+
+.timeline-item.right.animate-in {
+  transform: translateX(0);
+}
+
+/* Apply vertical offsets to animated items */
+.timeline-item.animate-in[data-vertical-offset="50"] { 
+  transform: translateY(50px); 
+}
+.timeline-item.animate-in[data-vertical-offset="30"] { 
+  transform: translateY(30px); 
+}
+.timeline-item.animate-in[data-vertical-offset="-30"] { 
+  transform: translateY(-30px); 
+}
+.timeline-item.animate-in[data-vertical-offset="-50"] { 
+  transform: translateY(-50px); 
+}
+
+.timeline-dot {
+      position: absolute;
+    left: 50%;
+    top: 30px;
+    width: 13px;
+    height: 13px;
+    background-color: #ddd;
+    border-radius: 50%;
+    transform: translate(-50%, -50%) scale(0.7);
+    z-index: 4;
+    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    border: none;
+}
+
+.timeline-item.left .timeline-dot {
+      left: calc(100% + 0px); /* Align to center line from left side */
+}
+
+.timeline-item.right .timeline-dot {
+  left:0px; /* Align to center line from right side */
+}
+
+.timeline-item.animate-in .timeline-dot {
+  background-color: var(--primary-color, #333);
+  transform: translate(-50%, -50%) scale(1);
+  /*animation: pulse 3s infinite;*/
+}
+
+@keyframes pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(51, 51, 51, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 15px rgba(51, 51, 51, 0);
+  }
+}
+
+.timeline-connector {
+  position: absolute;
+  top: 30px; /* Aligned with dot */
+  height: 2px;
+  background-color: var(--primary-color, #333);
+  z-index: 3;
+  transform: translateY(-50%) scaleX(0);
+  transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  transition-delay: 0.3s;
+}
+
+.timeline-item.left .timeline-connector {
+  right: 0;
+  width: 80px; /* Reduced width for tighter layout */
+  transform-origin: right;
+}
+
+.timeline-item.right .timeline-connector {
+  left: 0;
+  width: 80px; /* Reduced width for tighter layout */
+  transform-origin: left;
+}
+
+.timeline-item.animate-in .timeline-connector {
+  transform: translateY(-50%) scaleX(1);
+}
+.timeline-content {
+  display:flex;
+}
+.timeline-content.images-bottom {
+  flex-direction: column;
+}
+.timeline-content.images-side {
+  flex-direction: row;
+}
+.timeline-item.left .timeline-content.images-side {
+  flex-direction: row-reverse;
+}
+.timeline-content {
+  max-width: 350px; /* Reduced max width */
+  padding: 0;
+  position: relative;
+  background: transparent;
+}
+
+.timeline-item.left .timeline-content {
+  margin-right: 100px; /* Adjusted margin */
+  padding-right: 0;
+}
+
+.timeline-item.right .timeline-content {
+  margin-left: 100px; /* Adjusted margin */
+  padding-left: 0;
+}
+
+.timeline-year {
+     font-size: 18px;
+    color: var(--primary-color);
+    margin-bottom: 11px;
+    line-height: 100%;
+    letter-spacing: 0.36px !important;
+    font-family: 'Trade Gothic Next LT Pro';
+}
+
+.timeline-item-title {
+  font-size: 0.95em; /* Slightly smaller */
+  font-weight: 500;
+  color: var(--text-color, #333);
+  margin: 0 0 10px 0; /* Reduced margin */
+  line-height: 1.4;
+  max-width: 280px; /* Reduced width */
+}
+
+.timeline-description {
+     color: var(--text-color);
+    line-height: 120%;
+    margin-bottom: 12px;
+    font-size: 18px;
+    max-width: 300px;
+    font-family: 'GT America Trial';
+    font-weight: 400;
+}
+
+.timeline-highlight {
+  background-color: var(--secondary-color, #f0f0f0);
+  padding: 6px 10px; /* Reduced padding */
+  border-radius: 6px;
+  font-style: italic;
+  color: var(--primary-color, #333);
+  font-size: 0.8em; /* Smaller text */
+  margin-bottom: 12px; /* Reduced margin */
+  max-width: 280px;
+}
+
+.timeline-images {
+  display: flex;
+  gap: 12px; /* Reduced gap */
+  align-items: start;
+}
+
+.timeline-images.bottom {
+  flex-direction: row;
+  justify-content: flex-start;
+}
+
+.timeline-images.side {
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.timeline-item.left .timeline-images {
+  justify-content: flex-end;
+}
+
+.timeline-item.left .timeline-images.side {
+  align-items: flex-end;
+}
+
+.timeline-image {
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  /* border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 3px 15px rgba(0,0,0,0.1);  */
+  max-width: 520px; /* Limit image size for tighter layout */
+}
+
+.timeline-image:hover {
+  transform: scale(1.05) rotate(1deg);
+}
+
+.timeline-image img {
+  width: 100%;
+  min-width: 140px;
+  height: auto;
+  display: block;
+  transition: transform 0.3s ease;
+}
+
+.timeline-footer {
+  text-align: center;
+  margin-top: 120px; /* Adjusted for absolute positioning */
+  padding-top: 40px;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.8s ease;
+}
+
+.timeline-footer.animate-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.timeline-footer-text {
+  font-size: 1.3em;
+  font-weight: 600;
+  color: var(--text-color, #333);
+  margin: 0;
+  line-height: 1.4;
+}
+
+  @media all and (min-width:1024px){
+    .timeline-item:last-child {
+    text-align: center;
+    width: 50%;
+    margin: auto;
+    background: white;
+    z-index: 1;
+    justify-content: center;
+}
+
+.timeline-item:last-child .timeline-dot {
+    left: 50%;
+    transform: translateX(-50%);
+    top: 0px;
+    border: none;
+    width: 13px;
+    height: 13px;
+}
+
+.timeline-item:last-child .timeline-connector {
+    display: none;
+}
+
+.timeline-item:last-child .timeline-content {
+    margin: 12px 0 0;
+}
+  }
+
+/* Mobile Styles */
+@media (max-width: 768px) {
+
+  .timeline-item:last-child .timeline-images {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+}
+
+.timeline-item:last-child .timeline-images img {
+    min-width: auto;
+}
+
+.timeline-content {
+    gap: 20px;
+    align-items: flex-start;
+}
+
+.timeline-content.images-bottom {
+    gap: 0px;
+}
+  
+  .timeline-line {
+    left: 40px;
+  }
+  
+  .timeline-item {
+    position: relative !important; /* Reset to relative on mobile */
+    top: auto !important;
+    left: auto !important;
+    right: auto !important;
+    width: 100% !important;
+    justify-content: flex-start !important;
+    text-align: left !important;
+    transform: translateX(50px) !important;
+    margin-bottom: 40px; /* Add bottom margin for mobile */
+  }
+  
+  .timeline-item.animate-in {
+    transform: translateX(0) !important;
+  }
+  
+  .timeline-content {
+    max-width: calc(100% - 80px);
+    margin-left: 80px !important;
+    margin-right: 0 !important;
+  }
+  
+  .timeline-dot {
+    left: 40px !important;
+    top: 20px !important;
+  }
+  
+  .timeline-connector {
+    display: none;
+  }
+  
+  .timeline-title {
+    font-size: 2.2em;
+  }
+  
+  .timeline-container {
+    padding: 0 20px;
+  }
+  
+  .timeline-images {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+  }
+
+  .timeline-wrapper {
+    min-height: auto !important;
+  }
+
+  .timeline-footer {
+    margin-top: 40px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .timeline-section {
+    padding: 60px 0;
+  }
+  
+  .timeline-container {
+    padding: 0 15px;
+  }
+  
+  .timeline-title {
+    font-size: 1.8em;
+  }
+  
+  .timeline-content {
+    max-width: calc(100% - 60px);
+    margin-left: 60px !important;
+  }
+  
+  .timeline-line {
+    left: 30px;
+  }
+  
+  .timeline-dot {
+    left: 30px !important;
+  }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const timelineItems = document.querySelectorAll('.timeline-item');
+  const timelineFooter = document.querySelector('.timeline-footer');
+  const timelineLine = document.querySelector('.timeline-line');
+  
+  // Apply custom vertical offsets on load
+  timelineItems.forEach((item, index) => {
+    const offset = item.getAttribute('data-vertical-offset') || '0';
+    if (offset !== '0') {
+      item.style.transform += ` translateY(${offset}px)`;
+    }
+  });
+  
+  // Intersection Observer for animations
+  const observerOptions = {
+    threshold: 0.2, /* Reduced threshold for tighter spacing */
+    rootMargin: '0px 0px -50px 0px' /* Reduced root margin */
+  };
+  
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('animate-in');
+        updateTimelineProgress();
+      }
+    });
+  }, observerOptions);
+  
+  // Observe all timeline items
+  timelineItems.forEach(item => {
+    observer.observe(item);
+  });
+  
+  // Observe footer
+  if (timelineFooter) {
+    observer.observe(timelineFooter);
+  }
+  
+  // Function to update timeline progress
+  function updateTimelineProgress() {
+    const animatedItems = document.querySelectorAll('.timeline-item.animate-in');
+    const totalItems = timelineItems.length;
+    
+    if (totalItems > 0) {
+      const progress = (animatedItems.length / totalItems) * 100;
+      if (timelineLine) {
+        timelineLine.style.setProperty('--line-progress', progress + '%');
+      }
+    }
+  }
+  
+  // Stagger animation delays (reduced for tighter timing)
+  timelineItems.forEach((item, index) => {
+    item.style.transitionDelay = (index * 0.1) + 's';
+    const connector = item.querySelector('.timeline-connector');
+    if (connector) {
+      connector.style.transitionDelay = (index * 0.1 + 0.3) + 's';
+    }
+  });
+  
+  // Parallax effect on scroll (reduced effect for tight layout)
+  let ticking = false;
+  
+  function updateParallax() {
+    const scrolled = window.pageYOffset;
+    const rate = scrolled * -0.01; /* Reduced parallax effect */
+    
+    if (timelineLine) {
+      timelineLine.style.transform = `translateX(-50%) translateY(${rate}px)`;
+    }
+    
+    ticking = false;
+  }
+  
+  function requestTick() {
+    if (!ticking) {
+      requestAnimationFrame(updateParallax);
+      ticking = true;
+    }
+  }
+  
+  window.addEventListener('scroll', requestTick);
+});
+</script>
+
+{% schema %}
+{
+  "name": "Timeline",
+  "settings": [
+    {
+      "type": "text",
+      "id": "section_title",
+      "label": "Section Title",
+      "default": "How it started"
+    },
+    {
+      "type": "text",
+      "id": "section_subtitle",
+      "label": "Section Subtitle",
+      "default": "INSPIRED FROM UNCONDITIONAL LOVE"
+    },
+    {
+      "type": "text",
+      "id": "bottom_text",
+      "label": "Bottom Text",
+      "default": "20,000+ happy customers and counting. Our tails are wagging."
+    },
+    {
+      "type": "color",
+      "id": "primary_color",
+      "label": "Primary Color",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "secondary_color",
+      "label": "Secondary Color",
+      "default": "#f0f0f0"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color",
+      "default": "#f8f8f8"
+    },
+        {
+            "type": "text",
+            "id": "button_label",
+            "label": "Button label"
+            
+        },
+        {
+            "type": "url",
+            "id": "button_link",
+            "label": "Button link"
+        }
+  ],
+  "blocks": [
+    {
+      "type": "timeline_item",
+      "name": "Timeline Item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "year",
+          "label": "Year",
+          "default": "2024"
+        },
+        {
+          "type": "textarea",
+          "id": "title",
+          "label": "Title",
+          "default": "Timeline Event Title"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Description",
+          "default": "Add your timeline event description here."
+        },
+        {
+          "type": "textarea",
+          "id": "highlight_text",
+          "label": "Highlight Text",
+          "info": "Optional highlighted text in colored box"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image 1"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_2",
+          "label": "Image 2",
+          "info": "Optional second image"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_3",
+          "label": "Image 3",
+          "info": "Optional third image"
+        },
+        {
+          "type": "select",
+          "id": "image_size",
+          "label": "Image Size",
+          "options": [
+            {
+              "value": "120x120",
+              "label": "Small (120px)"
+            },
+            {
+              "value": "150x150",
+              "label": "Medium (150px)"
+            },
+            {
+              "value": "200x200",
+              "label": "Large (200px)"
+            },
+            {
+              "value": "250x250",
+              "label": "Extra Large (250px)"
+            }
+          ],
+          "default": "150x150"
+        },
+        {
+          "type": "select",
+          "id": "position_style",
+          "label": "Image Position Style",
+          "options": [
+            {
+              "value": "bottom",
+              "label": "Bottom"
+            },
+            {
+              "value": "side",
+              "label": "Side"
+            }
+          ],
+          "default": "bottom"
+        },
+        {
+          "type": "select",
+          "id": "image_position",
+          "label": "Image Layout",
+          "options": [
+            {
+              "value": "bottom",
+              "label": "Side by Side"
+            },
+            {
+              "value": "side",
+              "label": "Stacked"
+            }
+          ],
+          "default": "bottom"
+        },
+        {
+          "type": "select",
+          "id": "alignment",
+          "label": "Content Alignment",
+          "options": [
+            {
+              "value": "left",
+              "label": "Left"
+            },
+            {
+              "value": "right",
+              "label": "Right"
+            }
+          ],
+          "default": "left"
+        },
+        {
+          "type": "select",
+          "id": "vertical_offset",
+          "label": "Vertical Position Adjustment",
+          "info": "Fine-tune vertical positioning to avoid overlaps",
+          "options": [
+            {
+              "value": "-50",
+              "label": "Move Up (Large)"
+            },
+            {
+              "value": "-30",
+              "label": "Move Up (Small)"
+            },
+            {
+              "value": "0",
+              "label": "Default Position"
+            },
+            {
+              "value": "30",
+              "label": "Move Down (Small)"
+            },
+            {
+              "value": "50",
+              "label": "Move Down (Large)"
+            }
+          ],
+          "default": "0"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Timeline",
+      "blocks": [
+        {
+          "type": "timeline_item",
+          "settings": {
+            "year": "2012",
+            "title": "Kyndall and Jake meet and become high school sweethearts.",
+            "alignment": "right",
+            "vertical_offset": "0"
+          }
+        },
+        {
+          "type": "timeline_item",
+          "settings": {
+            "year": "2016",
+            "title": "Jake and Kyn get their first dog, Decker. It's love at first sight.",
+            "alignment": "left",
+            "vertical_offset": "-30"
+          }
+        },
+        {
+          "type": "timeline_item",
+          "settings": {
+            "year": "2019",
+            "title": "Kyn and Jake tie the knot. Of course, all 3 dogs are there as witnesses.",
+            "alignment": "right",
+            "vertical_offset": "30"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

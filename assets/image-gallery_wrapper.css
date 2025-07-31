@@ -1,0 +1,111 @@
+.image-gallery {
+    background: #FAF9F5;
+}
+
+.image-gallery_wrapper {
+    display: grid;
+    grid-template-columns: 20% 75%;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* .image-gallery_wrapper_items {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 20px;
+} */
+
+.image-gallery_wrapper .main_content_part {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 40px;
+    max-width: 220px;
+}
+
+.image-gallery_wrapper .main_content_part .title {
+    font-family: 'GT America Trial';
+    font-weight: 700;
+    font-size: 29px;
+    line-height: 30px;
+    letter-spacing: 0;
+}
+
+.image-gallery_wrapper .main_content_part .content {
+    font-family: 'GT America Trial';
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 20px;
+    letter-spacing: 0;
+}
+
+ /* the slides */
+  .slick-slide {
+      margin: 0 20px;
+  }
+
+  /* the parent */
+  .slick-list {
+      margin: 0 -20px;
+  }
+
+/*  */
+.slick-prev, .slick-next {
+    background-image: url(https://cdn.shopify.com/s/files/1/0260/1172/9968/files/arrow.png?v=1753341398);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 7px 13px;
+    z-index: 1;
+}
+
+.slick-prev:before, .slick-next:before {
+    content: "";
+}
+
+.slick-prev {
+    transform: rotate(180deg);
+}
+
+.slick-prev:hover, .slick-prev:focus, .slick-next:hover, .slick-next:focus {
+    background-image: url(https://cdn.shopify.com/s/files/1/0260/1172/9968/files/arrow.png?v=1753341398);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 7px 13px;
+}
+.image-gallery_wrapper img.img-fluid {
+    max-width: 100%;
+    height: auto;
+}
+
+
+@media all and (max-width:767px){
+  .image-gallery_wrapper_items {
+    width: 100%;
+}
+  .image-gallery_wrapper .main_content_part {
+    max-width: 100%;
+    gap: 10px;
+  }
+  .image-gallery_wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+  }
+   /* the slides */
+  .slick-slide {
+      margin: 0 10px;
+  }
+
+  /* the parent */
+  .slick-list {
+      margin: 0 -10px;
+  }
+  .slick-prev {
+    left: 0;
+}
+
+.slick-next {
+    right: 0;
+}
+}

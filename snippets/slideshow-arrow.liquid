@@ -1,0 +1,55 @@
+{% comment %}
+  Usage:
+  {%- render 'slideshow-arrow', action: 'previous' -%}
+
+  Accepts:
+  - icon_style: {String} 'arrow' | 'chevron' (optional) -- the style of the icon, defaults to 'arrow'
+  - icon_size: {String} 'small' | 'medium' | 'large' (optional) -- the size of the icon, defaults to 'medium'
+  - icon_shape: {String} 'circle' | 'square' (optional) -- the shape of the control, defaults to 'none'
+{% endcomment %}
+
+{%- liquid
+  assign icon_name = 'arrow'
+  assign style = icon_style | default: 'arrow'
+
+  if icon_style contains 'chevron'
+    assign icon_name = 'caret'
+  endif
+
+  if icon_style contains 'large'
+    assign icon_size = 'large'
+  endif
+
+  assign shape = icon_shape | default: 'none'
+-%}
+
+<button
+  class="
+    slideshow-control slideshow-control--{{ action }}
+    {% if icon_size %} slideshow-control--{{ icon_size }}{% endif %}
+    slideshow-control--shape-{{ shape }}
+    slideshow-control--style-{{ style }}
+    button
+    {% if shape == 'none' %} button-unstyled button-unstyled--transparent{% endif %}
+    {% if action == 'previous' %} flip-x{% endif %}
+  "
+  {% # theme-check-disable %}
+  aria-label="{{ 'accessibility.slideshow_' | append: action | t }}"
+  {% # theme-check-enable %}
+  on:click="/{{ action }}"
+  ref="{{ action }}"
+>
+  <span class="svg-wrapper icon-{{ icon_name }}">
+    {%- if icon_name == 'caret' -%}
+      {{- 'icon-caret.svg' | inline_asset_content -}}
+    {%- else -%}
+      <svg xmlns="http://www.w3.org/2000/svg" width="10" height="15" viewBox="0 0 20 20" fill="none">
+        <path d="M1.5 1L8 7L1.5 14" stroke="currentColor" stroke-width="2"/>
+      </svg>
+      {% comment %}
+        {{- 'icon-arrow.svg' | inline_asset_content -}}
+      {% endcomment %}
+    {%- endif -%}
+  </span>
+</button>
+{% comment %}<!-- ymq option done -->{% endcomment %}

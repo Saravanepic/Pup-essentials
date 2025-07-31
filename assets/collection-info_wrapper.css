@@ -1,0 +1,74 @@
+.collection-info {
+    background: #FAF9F5;
+}
+
+.collection-info_wrapper {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 30px;
+}
+
+.collection-info_wrapper .main_content_part .title {
+    font-family: 'GT America Trial';
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 100%;
+    letter-spacing: 0;
+    text-align: center;
+}
+
+.collection-info_wrapper_items {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.box_items {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 10px;
+}
+
+.box_items .content_wrapper .title {
+    font-weight: 700;
+    font-size: 13px;
+    line-height: 100%;
+    letter-spacing: 0;
+    font-family: 'GT America Trial';
+}
+
+.box_items .content_wrapper .content {
+    font-family: 'GT America Trial';
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 100%;
+    letter-spacing: 0;
+}
+
+.box_items .content_wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+@media all and (max-width:767px){
+  .collection-info_wrapper_items {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+  }
+  
+  .box_items .svg_option {
+      width: 60px;
+  }
+  
+  .collection-info_wrapper .main_content_part .title {
+      font-size: 20px;
+      line-height: 120%;
+  }
+}

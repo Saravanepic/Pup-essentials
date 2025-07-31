@@ -1,0 +1,481 @@
+
+<div class="faq-section" data-section-id="{{ section.id }}">
+  <div class="page-width">
+    <div class="faq-container faq_main_title_container">
+      <div class="faq_main_title">
+        FAQs
+      </div>
+    </div>
+    
+    <div class="faq-container">
+      <!-- Categories Navigation -->
+      <div class="faq-categories">
+        {% assign categories = section.settings.category_1 | append: ',' | append: section.settings.category_2 | append: ',' | append: section.settings.category_3 | append: ',' | append: section.settings.category_4 | append: ',' | append: section.settings.category_5 | append: ',' | append: section.settings.category_6 | append: ',' | append: section.settings.category_7 | append: ',' | append: section.settings.category_8 | append: ',' | append: section.settings.category_9    | split: ','  %}
+        {% for category in categories %}
+          {% if category != blank %}
+            <a class="faq-category-item" href="#{{ category | handleize }}">
+              {{ category }}
+            </a>
+          {% endif %}
+        {% endfor %}
+      </div>
+
+      <!-- FAQ Content -->
+      <div class="faq-content">
+        <!-- All FAQs View (Default) -->
+        <div class="faq-all-content active">
+          {% assign categories = section.settings.category_1 | append: ',' | append: section.settings.category_2 | append: ',' | append: section.settings.category_3 | append: ',' | append: section.settings.category_4 | append: ',' | append: section.settings.category_5 | append: ',' | append: section.settings.category_6 | append: ',' | append: section.settings.category_7 | append: ',' | append: section.settings.category_8 | append: ',' | append: section.settings.category_9    | split: ','  %}
+          
+          {% for category in categories %}
+            {% if category != blank %}
+              {% assign has_faqs = false %}
+              {% for block in section.blocks %}
+                {% if block.settings.category == category %}
+                  {% assign has_faqs = true %}
+                  {% break %}
+                {% endif %}
+              {% endfor %}
+              
+              {% if has_faqs %}
+                <div class="faq-category-section">
+                  <h2 class="faq-category-title" id="{{ category | handleize }}">{{ category }}</h2>
+                  
+                  {% for block in section.blocks %}
+                    {% if block.settings.category == category %}
+                      <div class="faq-item" {{ block.shopify_attributes }}>
+                        <button class="faq-question" type="button" aria-expanded="false">
+                          <span>{{ block.settings.question }}</span>
+                          <span class="faq-icon">+</span>
+                        </button>
+                        <div class="faq-answer">
+                          <div class="faq-answer-content">
+                            {{ block.settings.answer }}
+                          </div>
+                        </div>
+                      </div>
+                    {% endif %}
+                  {% endfor %}
+                </div>
+              {% endif %}
+            {% endif %}
+          {% endfor %}
+        </div>
+        
+        <!-- Category-specific Views -->
+        {% for category in categories %}
+          {% if category != blank %}
+            <div class="faq-category-content" data-category="{{ category | handleize }}">
+              <h2 class="faq-category-title">{{ category }}</h2>
+              
+              {% for block in section.blocks %}
+                {% if block.settings.category == category %}
+                  <div class="faq-item" {{ block.shopify_attributes }}>
+                    <button class="faq-question" type="button" aria-expanded="false">
+                      <span>{{ block.settings.question }}</span>
+                      <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-answer">
+                      <div class="faq-answer-content">
+                        {{ block.settings.answer }}
+                      </div>
+                    </div>
+                  </div>
+                {% endif %}
+              {% endfor %}
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .faq_main_title {
+    font-family: 'GT America Trial';
+    font-weight: 700;
+    font-size: 40px;
+    line-height: 100%;
+    margin: 0 0 35px 290px;
+  }
+  .faq-section {
+    padding: 60px 0;
+    background-color: #fff;
+  }
+
+  .faq-container {
+    display: flex;
+    gap: 40px;
+    max-width: 980px;
+    margin: 0 auto;
+    
+  }
+
+  .faq-categories {
+    flex: 0 0 250px;
+    /* background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    height: fit-content; */
+    position: sticky;
+    top: 20px;
+        border-right: 1px solid rgba(0, 0, 0, 1);
+        display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .faq-category-item {
+       font-family: Trade Gothic Next LT Pro;
+    font-weight: 800;
+    font-size: 18px;
+    line-height: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: black;
+    text-transform: uppercase;
+    display:block;
+  }
+
+
+
+  /* .faq-category-item:hover,
+  .faq-category-item.active {
+    color: #000;
+    background-color: #f5f5f5;
+  }
+ */
+  .faq-content {
+    flex: 1;
+  }
+
+  .faq-category-content {
+    display: none;
+  }
+
+  .faq-category-content.active {
+    display: block;
+  }
+
+  .faq-all-content {
+    display: none;
+  }
+
+  .faq-all-content.active {
+    display: block;
+  }
+
+  .faq-category-section {
+    margin-bottom: 50px;
+  }
+
+  .faq-category-section:last-child {
+    margin-bottom: 0;
+  }
+
+  .faq-category-title{
+    padding-top: 150px!important;
+    margin-top: -150px!important;
+  }
+  .faq-category-title {
+    
+    color: #000;
+    text-transform: uppercase;
+    letter-spacing: 0;
+    font-family: 'Trade Gothic Next LT Pro';
+    font-weight: 800;
+    font-size: 19px;
+    line-height: 130%;
+    border-bottom:1px solid black;
+        padding: 0px 10px 10px;
+    margin:0;
+  }
+
+  .faq-item {
+    /* background: white;
+    margin-bottom: 2px;
+    border-radius: 0;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1); */
+    border-bottom:1px solid black;
+  }
+
+  .faq-question {
+   
+    padding: 5px 10px;
+    border: none;
+    text-align: left;
+    color: black;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.3s ease;
+    font-family: 'GT America Trial';
+    font-weight: 700;
+    font-size: 19px;
+    line-height: 45px;
+    background: white;
+    width:100%;
+  }
+
+  /* .faq-question:hover {
+    background-color: #f9f9f9;
+  } */
+
+  .faq-icon {
+    font-size: 24px;
+    font-weight: 300;
+    transition: transform 0.3s ease;
+    color: #000;
+  }
+
+  .faq-question[aria-expanded="true"] .faq-icon {
+    transform: rotate(45deg);
+  }
+
+  .faq-answer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+    background: white;
+  }
+
+  .faq-answer.active {
+    max-height: 500px;
+    transition: max-height 0.3s ease;
+  }
+
+  .faq-answer-content {
+       padding: 0 20px 20px;
+    color: black;
+    line-height: 22px;
+    font-size: 16px;
+  }
+  .faq-answer .faq-answer-content {
+    padding: 0 10px 20px;
+  }
+
+  /* Mobile Responsive */
+  @media (max-width: 768px) {
+    .faq-category-title {
+      padding-top: 100px !important;
+      margin-top: -100px !important;
+    }
+    .faq_main_title {
+        margin: 5px 5px 20px;
+        font-size: 32px;
+    }
+    .faq-section {
+      padding: 60px 5px;
+    }
+    .faq-container {
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .faq-categories {
+        display: flex !important;
+        position: relative;
+        gap: 5px;
+        padding: 0;
+        flex-wrap: wrap;
+        flex-direction: row;
+              flex: 0;
+              border: none;
+      margin:0 0 40px;
+    }
+
+    .faq-category-item {
+      white-space: nowrap;
+        border-bottom: none;
+               border-radius: 0;
+        padding: 0 5px;
+        font-size: 20px;
+    }
+
+    .faq-question {
+      padding: 5px 10px;
+        font-size: 12px;
+    }
+    .faq-question span{
+      line-height:120%;
+    }
+
+    .faq-answer-content {
+      padding: 0 10px 20px;
+      font-size: 14px;
+    }
+    .faq-answer-content p {
+        line-height: 110%!important;
+    }
+    .faq-answer-content * {
+      font-size: 12px!important;
+        line-height: 110%!important;
+    }
+
+    .faq-category-title {
+      font-size: 16px;
+      margin-bottom: 0;
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+
+
+    const sectionId = '{{ section.id }}';
+    const section = document.querySelector(`[data-section-id="${sectionId}"]`);
+    
+    if (!section) return;
+
+   
+    
+    // FAQ accordion functionality
+    const faqQuestions = section.querySelectorAll('.faq-question');
+    
+    faqQuestions.forEach(question => {
+      question.addEventListener('click', function() {
+        const answer = this.nextElementSibling;
+        const isExpanded = this.getAttribute('aria-expanded') === 'true';
+        
+        // Close all other answers
+        faqQuestions.forEach(q => {
+          if (q !== this) {
+            q.setAttribute('aria-expanded', 'false');
+            q.nextElementSibling.classList.remove('active');
+          }
+        });
+        
+        // Toggle current answer
+        this.setAttribute('aria-expanded', !isExpanded);
+        answer.classList.toggle('active', !isExpanded);
+      });
+    });
+  });
+</script>
+
+{% schema %}
+{
+  "name": "FAQ Section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "FAQ Categories"
+    },
+    {
+      "type": "text",
+      "id": "category_1",
+      "label": "Category 1",
+      "default": "Shipping"
+    },
+    {
+      "type": "text",
+      "id": "category_2",
+      "label": "Category 2",
+      "default": "Payment"
+    },
+    {
+      "type": "text",
+      "id": "category_3",
+      "label": "Category 3",
+      "default": "Returns & Exchanges"
+    },
+    {
+      "type": "text",
+      "id": "category_4",
+      "label": "Category 4",
+      "default": "Product"
+    },
+    {
+      "type": "text",
+      "id": "category_5",
+      "label": "Category 5",
+      "default": "Ordering"
+    },
+    {
+      "type": "text",
+      "id": "category_6",
+      "label": "Category 6",
+      "default": "Photo Uploads & Artwork"
+    },
+    {
+      "type": "text",
+      "id": "category_7",
+      "label": "Category 7",
+      "default": "Custom Details & Add-ons"
+    },
+    {
+      "type": "text",
+      "id": "category_8",
+      "label": "Category 8",
+      "default": "Sizing & Fit"
+    },
+    {
+      "type": "text",
+      "id": "category_9",
+      "label": "Category 9",
+      "default": "Still Have Questions?"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "faq_item",
+      "name": "FAQ Item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "category",
+          "label": "Category",
+          "default": "Shipping",
+          "info": "Enter the exact category name as defined in section settings above"
+        },
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question",
+          "default": "Where does Pupsentials ship?"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "Answer",
+          "default": "<p>We ship to all major locations. Please check our shipping policy for detailed information about delivery areas and timelines.</p>"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "FAQ Section",
+      "blocks": [
+        {
+          "type": "faq_item",
+          "settings": {
+            "category": "Shipping",
+            "question": "Where does Pupsentials ship?",
+            "answer": "<p>We ship to all major locations. Please check our shipping policy for detailed information.</p>"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "category": "Shipping",
+            "question": "How much does shipping cost?",
+            "answer": "<p>Shipping costs vary based on location and order size. Free shipping is available on orders over $50.</p>"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "category": "Payment",
+            "question": "What payment methods does Pupsentials accept?",
+            "answer": "<p>We accept all major credit cards, PayPal, Apple Pay, and Google Pay for your convenience.</p>"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

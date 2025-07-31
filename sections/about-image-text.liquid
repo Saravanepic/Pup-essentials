@@ -1,0 +1,439 @@
+{% comment %}
+  Testimonial Story Section
+  A flexible section for displaying personal stories with images, text, and customizable layouts
+{% endcomment %}
+
+<section class="testimonial-story-section">
+  <div class="container">
+    {% for block in section.blocks %}
+      {% case block.type %}
+        {% when 'story_block' %}
+          <div class="story-block {{ block.settings.classname }}" {{ block.shopify_attributes }}>
+            <div class="story-content {% if block.settings.image_position == 'right' %}story-content--reverse{% endif %}">
+              
+              {% comment %} Text Content {% endcomment %}
+              <div class="story-text">
+                {% if block.settings.headline != blank %}
+                  <h2 class="story-headline">{{ block.settings.headline }}</h2>
+                {% endif %}
+                
+                {% if block.settings.content != blank %}
+                  <div class="story-content-text">
+                    {{ block.settings.content }}
+                  </div>
+                {% endif %}
+                
+                {% if block.settings.signature_image != blank %}
+                  <div class="story-signature">
+                    <img src="{{ block.settings.signature_image | image_url: width: 200 }}" 
+                         alt="Signature" 
+                         loading="lazy">
+                  </div>
+                {% endif %}
+              </div>
+              
+              {% comment %} Main Image {% endcomment %}
+              {% if block.settings.main_image != blank %}
+                <div class="story-image">
+                  <img src="{{ block.settings.main_image | image_url: width: 800 }}" 
+                       alt="{{ block.settings.main_image.alt | default: block.settings.headline }}"
+                       loading="lazy">
+                </div>
+              {% endif %}
+              
+            </div>
+          </div>
+        
+        {% when 'highlight_block' %}
+          <div class="highlight-block {{ block.settings.classname }}" {{ block.shopify_attributes }}>
+            <div class="highlight-content {% if block.settings.image_position == 'right' %}highlight-content--reverse{% endif %}">
+              
+              {% comment %} Highlight Text {% endcomment %}
+              <div class="highlight-text">
+                {% if block.settings.headline != blank %}
+                  <h3 class="highlight-headline">{{ block.settings.headline }}</h3>
+                {% endif %}
+                {% if block.settings.content != blank %}
+                  <div class="highlight-content-text">
+                    {{ block.settings.content }}
+                  </div>
+                {% endif %}
+              </div>
+              
+              {% comment %} Highlight Image {% endcomment %}
+              {% if block.settings.main_image != blank %}
+                <div class="highlight-image">
+                  <img src="{{ block.settings.main_image | image_url: width: 600 }}" 
+                       alt="{{ block.settings.main_image.alt | default: block.settings.headline }}"
+                       loading="lazy">
+                </div>
+              {% endif %}
+              
+            </div>
+            
+            {% if block.settings.signature_image != blank %}
+              <div class="highlight-signature">
+                <img src="{{ block.settings.signature_image | image_url: width: 150 }}" 
+                     alt="Additional Image" 
+                     loading="lazy">
+              </div>
+            {% endif %}
+          </div>
+      {% endcase %}
+    {% endfor %}
+  </div>
+</section>
+
+<style>
+  @media all and (min-width:1024px){
+    .padding_x_120 .story-text {
+        padding: 40px 120px;
+    }
+    .padding_x_65 .story-text {
+        padding: 40px 140px 40px 65px;
+    }
+  }
+  .testimonial-story-section {
+    padding: 0;
+  }
+  
+  .container {
+      max-width: 100% !important;
+    margin: 0 auto !important;
+    padding: 0 !important;
+  }
+  
+  /* Story Block Styles */
+  
+  .story-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+        /* max-width: 1440px;
+    margin: auto; */
+  }
+
+  .story-block:nth-child(odd) .story-text {
+    max-width: 675px;
+    margin-left: auto;
+}
+
+.story-block:nth-child(even) .story-text {
+    max-width: 675px;
+    margin-right: auto;
+}
+  
+  .story-content--reverse {
+    direction: rtl;
+  }
+  
+  .story-content--reverse > * {
+    direction: ltr;
+  }
+  
+  .story-text {
+    padding: 40px;
+  }
+
+  .highlight-headline,
+  .story-headline {
+       color: #000;
+    margin-bottom: 24px;
+    font-family: Trade Gothic Next LT Pro;
+    font-size: 26px;
+    line-height: 100%;
+    letter-spacing: 0.32px !important;
+    text-transform: uppercase;
+  }
+  .highlight-content-text, .highlight-content-text p,
+  .story-content-text, .story-content-text p {
+    font-size: 16px;
+    line-height: 100%;
+    color: #000000;
+    margin-bottom: 30px;
+    font-family: 'GT America Trial';
+    font-weight: 400;
+    max-width: 100%;
+  }
+  
+  .story-content-text p {
+    margin-bottom: 20px;
+  }
+  
+  .story-content-text p:last-child {
+    margin-bottom: 0;
+  }
+  
+  .story-signature {
+    margin-top: 30px;
+  }
+  
+  .story-signature img {
+    max-width: 150px;
+    height: auto;
+  }
+  
+  .story-image {
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+  }
+  
+  .story-image img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+  
+  /* Highlight Block Styles */
+  .highlight-block {
+  }
+  
+  /* .highlight-headline {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 40px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  } */
+  
+  .highlight-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+  }
+  
+  .highlight-content--reverse {
+    direction: rtl;
+  }
+  
+  .highlight-content--reverse > * {
+    direction: ltr;
+  }
+  
+  .highlight-text {
+    padding: 0 40px;
+    font-size: 16px;
+    line-height: 1.7;
+    color: #555;
+  }
+  
+  .highlight-content-text p {
+    margin-bottom: 18px;
+  }
+  
+  .highlight-content-text p:last-child {
+    margin-bottom: 0;
+  }
+  
+  .highlight-image {
+    overflow: hidden;
+  }
+  
+  .highlight-image img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+  
+  .highlight-signature {
+    margin-top: 40px;
+    text-align: center;
+  }
+  
+  .highlight-signature img {
+    max-width: 120px;
+    height: auto;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .testimonial-story-section {
+      padding: 40px 0;
+    }
+    
+    .container {
+      padding: 0 15px;
+    }
+    
+    .story-content,
+    .highlight-content {
+      grid-template-columns: 1fr;
+      gap: 30px;
+    }
+    
+    .story-content--reverse,
+    .highlight-content--reverse {
+      direction: ltr;
+    }
+    
+    .story-text {
+      padding: 30px 25px;
+    }
+    
+    .story-headline {
+      font-size: 24px;
+    }
+    
+    .highlight-block {
+      padding: 30px 25px;
+    }
+    
+    .highlight-headline {
+      font-size: 20px;
+      margin-bottom: 30px;
+    }
+    
+    .story-block {
+      margin-bottom: 50px;
+    }
+  }
+  
+  /* Very small screens */
+  @media (max-width: 480px) {
+    .story-text {
+      padding: 25px 20px;
+    }
+    
+    .story-headline {
+      font-size: 22px;
+      margin-bottom: 20px;
+    }
+    
+    .story-content-text,
+    .highlight-text {
+      font-size: 15px;
+    }
+    
+    .highlight-block {
+      padding: 25px 20px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "About Image Text",
+  "tag": "section",
+  "class": "section-testimonial-story",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Settings"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "story_block",
+      "name": "Story Block",
+      "settings": [
+        {
+          "type": "text",
+          "id": "classname",
+          "label": "Class Name"
+        },
+        {
+          "type": "image_picker",
+          "id": "main_image",
+          "label": "Main Image"
+        },
+        {
+          "type": "select",
+          "id": "image_position",
+          "label": "Image Position",
+          "options": [
+            {
+              "value": "left",
+              "label": "Left"
+            },
+            {
+              "value": "right",
+              "label": "Right"
+            }
+          ],
+          "default": "right"
+        },
+        {
+          "type": "text",
+          "id": "headline",
+          "label": "Headline",
+          "default": "Hi, I'm [Name]"
+        },
+        {
+          "type": "richtext",
+          "id": "content",
+          "label": "Story Content",
+          "default": "<p>Share your story here. Talk about your journey, your passion, and what drives you.</p><p>Add multiple paragraphs to tell your complete story in an engaging way.</p>"
+        },
+        {
+          "type": "image_picker",
+          "id": "signature_image",
+          "label": "Signature/End Image"
+        }
+      ]
+    },
+    {
+      "type": "highlight_block",
+      "name": "Highlight Block",
+      "settings": [
+        {
+          "type": "text",
+          "id": "classname",
+          "label": "Class Name"
+        },
+        {
+          "type": "text",
+          "id": "headline",
+          "label": "Headline",
+          "default": "Every Purchase Gives Back"
+        },
+        {
+          "type": "image_picker",
+          "id": "main_image",
+          "label": "Main Image"
+        },
+        {
+          "type": "select",
+          "id": "image_position",
+          "label": "Image Position",
+          "options": [
+            {
+              "value": "left",
+              "label": "Left"
+            },
+            {
+              "value": "right",
+              "label": "Right"
+            }
+          ],
+          "default": "left"
+        },
+        {
+          "type": "richtext",
+          "id": "content",
+          "label": "Content",
+          "default": "<p>Describe your mission, values, or what makes your brand special.</p><p>Explain how customers contribute to your cause or community.</p>"
+        },
+        {
+          "type": "image_picker",
+          "id": "signature_image",
+          "label": "Additional Image"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "About Image Text",
+      "blocks": [
+        {
+          "type": "story_block"
+        },
+        {
+          "type": "highlight_block"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

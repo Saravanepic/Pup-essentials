@@ -1,0 +1,284 @@
+<!-- every-stitch-story.liquid -->
+<div class="section section-{{ section.id }}">
+<div class="every-stitch-section " style="background-color: {{ section.settings.bg_color }};">
+  <div class="container">
+    <h2 class="section-title">{{ section.settings.title }}</h2>
+    
+    <div class="features-grid">
+      {% for block in section.blocks %}
+        <div class="feature-item" {{ block.shopify_attributes }}>
+          <div class="feature-icon">
+            {% if block.settings.svg_option != blank %}
+
+              {{ block.settings.svg_option }}
+            {% else %}
+               {% if block.settings.icon != blank %}
+              <img src="{{ block.settings.icon | image_url }}" alt="{{ block.settings.title }}" loading="lazy">
+            {% else %}
+              <!-- Default SVG icons if no image is uploaded -->
+              {% case forloop.index %}
+                {% when 1 %}
+                  <svg width="60" height="60" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M20 30 Q30 20, 40 30 L60 50 Q70 60, 60 70 L40 50 Q30 40, 20 50 Z" stroke="currentColor" stroke-width="2" fill="none"/>
+                    <circle cx="25" cy="25" r="15" stroke="currentColor" stroke-width="2" fill="none"/>
+                    <path d="M35 35 L80 80" stroke="currentColor" stroke-width="2"/>
+                  </svg>
+                {% when 2 %}
+                  <svg width="60" height="60" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="15" y="20" width="70" height="60" rx="5" stroke="currentColor" stroke-width="2" fill="none"/>
+                    <circle cx="35" cy="35" r="3" fill="currentColor"/>
+                    <circle cx="50" cy="40" r="2" fill="currentColor"/>
+                    <circle cx="65" cy="35" r="2.5" fill="currentColor"/>
+                    <path d="M25 50 Q35 45, 45 50 T65 50" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                    <path d="M30 60 Q40 55, 50 60 T70 60" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                  </svg>
+                {% when 3 %}
+                  <svg width="60" height="60" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M30 70 Q35 60, 45 65 Q55 70, 65 60 Q70 55, 75 65" stroke="currentColor" stroke-width="2" fill="none"/>
+                    <circle cx="25" cy="50" r="8" stroke="currentColor" stroke-width="2" fill="none"/>
+                    <circle cx="50" cy="45" r="6" stroke="currentColor" stroke-width="2" fill="none"/>
+                    <circle cx="75" cy="50" r="7" stroke="currentColor" stroke-width="2" fill="none"/>
+                    <path d="M20 30 Q30 25, 40 30" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                    <path d="M60 30 Q70 25, 80 30" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                  </svg>
+                {% else %}
+                  <div class="placeholder-icon"></div>
+              {% endcase %}
+            {% endif %}
+            {% endif %}  
+           
+          </div>
+          
+          <h3 class="feature-title">{{ block.settings.title }}</h3>
+          <p class="feature-description">{{ block.settings.description }}</p>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+</div>
+
+<style>
+.section-{{ section.id }}{
+  background-color: {{ section.settings.bg_color }};
+}
+
+  @media all and (min-width:1200px){
+    .feature-icon {
+        height: 100px;
+    }
+    h2.section-title {
+    font-family: 'GT America Trial';
+    font-weight: 700;
+    font-size: 35px;
+    line-height: 100%;
+    }
+  }
+.every-stitch-section {
+  padding: 80px 0;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.section-title {
+  font-size: 2.5rem;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 60px;
+  color: #000;
+  
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 40px;
+  align-items: start;
+}
+
+.feature-item {
+  text-align: center;
+  padding: 20px;
+}
+
+.feature-icon {
+  margin-bottom: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* height: 80px; */
+  color: #000;
+}
+
+.feature-icon img {
+    max-width: 100px;
+    max-height: 100px;
+  object-fit: contain;
+}
+
+/* .feature-icon svg {
+  width: 60px;
+  height: 60px;
+} */
+
+.placeholder-icon {
+  width: 60px;
+  height: 60px;
+  background-color: #ddd;
+  border-radius: 50%;
+}
+
+.feature-title {
+      font-family: Trade Gothic Next LT Pro;
+    font-weight: 800;
+    font-size: 22px;
+    line-height: 100%;
+    letter-spacing: 0.36px !important;
+    text-align: center;
+    text-transform: uppercase;
+  margin:0;
+  
+}
+
+.feature-description {
+    margin:30px 0 auto;
+    font-family: "GT America Trial";
+    font-weight: 400;
+    font-size: 18px!important;
+    line-height: 100%;
+    text-align: center;
+    max-width:300px;
+      margin-left: auto;
+    margin-right: auto;
+  
+}
+
+@media (max-width: 768px) {
+
+.features-grid {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: scroll;
+    padding: 0;
+    gap: 20px;
+    overflow-y: hidden;
+}
+
+.feature-item {
+    width: 75%;
+    min-width: 75%;
+    padding: 0;
+}
+
+.every-stitch-section .container {
+    padding: 0;
+}
+  
+  
+  .every-stitch-section {
+    padding: 60px 0;
+  }
+  
+  .section-title {
+    font-size: 2rem;
+    margin-bottom: 40px;
+  }
+  
+  .features-grid {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+  
+  .feature-description {
+    max-width: none;
+  }
+  .feature-icon {
+    min-height: 120px;
+    margin-bottom: 20px;
+  }
+}
+</style>
+
+{% schema %}
+{
+  "name": "Custom Image Text",
+  "tag": "section",
+  "class": "image_with_text_custom",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section Title",
+      "default": "Every stitch, a story"
+    },
+    {
+      "type": "color",
+      "label": "Background Color",
+      "id": "bg_color"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "feature",
+      "name": "Feature",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "icon",
+          "label": "Icon Image"
+        },
+        {
+          "type": "textarea",
+          "id": "svg_option",
+          "label": "SVG Option",
+          "info": "If using this image option wont show"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Feature Title"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Description",
+          "default": "Feature description goes here."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom Image Text",
+      "blocks": [
+        {
+          "type": "feature",
+          "settings": {
+            "title": "MADE BY REAL ARTISTS",
+            "description": "All our pieces are 1 of 1 — drawn and stitched by real artists — to showcase the unique bond you have with your pup."
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "title": "HYPER-DETAILED EMBROIDERY",
+            "description": "With over 25,000 stitches and 15+ thread colors, we highlight every expression, marking, and nuance that makes your pup unmistakably yours."
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "title": "LOVED BY THOUSANDS",
+            "description": "We pour our heart into every piece to capture your pup's true essence, offering unlimited revisions until we get it just right."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

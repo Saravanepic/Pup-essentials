@@ -1,0 +1,273 @@
+{% liquid
+  assign addon_prod = settings.cart_addon_prod
+  assign not_in_cart = true
+   for item in cart.items
+    if item.product_id == addon_prod.id
+      assign not_in_cart = false
+    endif
+   endfor
+%}
+{% if product.tags contains "add-tote-bag" and addon_prod != blank %}
+
+  <div class="addon_wraper" style="{% unless not_in_cart %}display:none;{% endunless %}">
+    <div class="addon_img">
+      <img src="{{ addon_prod.featured_image | img_url: 'master' }}" alt="{{ addon_prod.title }}" class="img-fluid"/>
+    </div>
+    <div class="addon_content">
+      <span class="gold_text">
+        LIMITED TIME OFFER
+      </span>
+      <p>
+        Add a free tote with the same design.
+      </p>
+      <span class="price">
+        {{ addon_prod.price | money_without_trailing_zeros | remove: '.00' }} value
+      </span>
+    </div>
+    <div class="addon_checkbox">
+      <label class="container">
+        <input id="addon-prod" type="checkbox">
+        <span class="checkmark"></span>
+      </label>
+    </div>
+  </div>
+<div>
+  
+</div>
+
+
+<style>
+  .addon_wraper {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    border: 1px solid #C6A877;
+    padding: 11px 20px;
+    border-radius: 8px;
+    gap: 14px;
+}
+
+.addon_img img {
+    max-width: 60px;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.addon_img {
+    height: 100%;
+}
+
+.addon_content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+}
+
+.addon_content .gold_text {
+    color: #C6A877;
+    font-family: Trade Gothic Next LT Pro;
+    font-weight: 800;
+    font-size: 11px;
+    line-height: 15px;
+    letter-spacing: 0;
+}
+
+.addon_content  p {
+    margin: 0;
+    font-weight: 700;
+    font-size: 13px!important;
+    line-height: 15px!important;
+    letter-spacing: 0;
+}
+
+.addon_content  span.price {
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 15px;
+    letter-spacing: 0;
+    font-family: GT America Trial;
+}
+
+.addon_checkbox {
+    margin-left: auto;
+}
+
+.addon_checkbox label.container {
+    padding: 0;
+}
+
+.addon_checkbox input#addon-prod {
+    margin: 0;
+    width: 16px;
+    height: 16px;
+}
+
+  /* Hide the default checkbox */
+.addon_checkbox .container input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+/* Custom checkbox */
+.addon_checkbox .checkmark {
+  position: relative;
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  background-color: #fff;
+  border: 1px solid #000;
+  border-radius: 3px;
+  cursor:pointer;
+}
+
+/* When checkbox is checked, change background to black */
+.addon_checkbox .container input:checked ~ .checkmark {
+  background-color: #000;
+}
+
+/* Create the checkmark (hidden when not checked) */
+.addon_checkbox .checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+/* Show the checkmark when checked */
+.addon_checkbox .container input:checked ~ .checkmark:after {
+  display: block;
+}
+
+/* Style the checkmark */
+.addon_checkbox .container .checkmark:after {
+  left: 5px;
+  top: 2px;
+  width: 5px;
+  height: 8px;
+  border: solid white;
+  border-width: 0 2.32px 2.32px 0;
+  transform: rotate(45deg);
+}
+</style>  
+{% endif %}
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    function handleProp(isChecked) {
+      const form = document.querySelector('product-form-component form')
+      if(form){
+        const propName = "properties[Tote_Bag]"
+        if(isChecked){
+          const inp = `<input type="hidden" name="${propName}" value="Yes">`
+          form.insertAdjacentHTML('beforeend', inp)
+        } else {
+          const inp = document.querySelector(`[name=${propName}]`)
+          if(inp) inp.remove()
+        }
+      }
+    }
+    const addonInp = document.querySelector('#addon-prod')
+  })
+
+  function removeFreeProd(variId, sectionId) {
+    fetch('/cart/update.js', {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({"updates": {[variId]: 0}, sections: sectionId})
+    }).then((response) => {
+      return response.text();
+    }).then((responseText) => {
+      triggerCartUpdateEvent(responseText, sectionId)
+    })
+  }
+
+  function triggerCartUpdateEvent(responseText, sectionId) {
+    const parsedResponseText = JSON.parse(responseText);
+    if (parsedResponseText.errors) {
+      console.log("parsedResponseText.errors", parsedResponseText.errors)
+      return;
+    }
+    const newSectionHTML = new DOMParser().parseFromString(
+      parsedResponseText.sections[sectionId],
+      'text/html'
+    );
+    console.log("parsedResponseText.sections", parsedResponseText.sections)
+    document.dispatchEvent(
+      new CustomEvent('cart:update', {detail: {
+        resource: {},
+        sourceId: sectionId,
+        data: {
+          source: "cart-items-component",
+          sections: parsedResponseText.sections,
+        }
+      }})
+    )
+  }
+
+  function toggleVisibility(show) {
+    const wrapper = document.querySelector('.addon_wraper')
+    if(!wrapper) return
+    if(show){
+      wrapper.style.display = 'flex'
+    } else {
+      wrapper.style.display = 'none'
+    }
+  }
+
+  document.addEventListener('cart:update', async function() {
+    const addonInp = document.querySelector('#addon-prod')
+    console.log("addonInp.checked", addonInp.checked)
+    const sectionId = document.querySelector('header').getAttribute('id')
+    const prodId = `{{ addon_prod.id }}`
+    const variId = `{{ addon_prod.first_available_variant.id }}`
+    const res = await fetch('/cart.js')
+    const data = await res.json()
+    const doesExist = data.items.some(el => el.product_id == prodId)
+    console.log("doesExist", doesExist)
+    if(addonInp.checked && !doesExist && data.items.length){
+      setTimeout(() => {
+        const thisProdTitle = `{{ product.title }}`
+        const thisProdId = `{{ product.id }}`
+        fetch('/cart/add.js', {
+          method: "POST",
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({"items": [{"id": variId, 'quantity': 1, 'properties': {product: thisProdTitle, '_prodId': thisProdId}}], sections: sectionId})
+        }).then((response) => {
+          return response.text();
+        }).then((responseText) => {
+          triggerCartUpdateEvent(responseText, sectionId)
+          toggleVisibility(false)
+        })
+      }, 250)
+    }
+
+    if(doesExist){
+      const found = data.items.find(el => el.product_id == prodId)
+      const assoProdId = found.properties._prodId
+      if(!data.items.some(el => el.product_id == assoProdId)){
+        removeFreeProd(variId, sectionId)
+        toggleVisibility(true)
+      }
+    }
+  })
+</script>
+
+{% schema %}
+  {
+    "name": "Addon Product",
+    "settings": [],
+    "presets": [
+      {
+        "name": "Addon Product"
+      }
+    ]
+  }
+{% endschema %}

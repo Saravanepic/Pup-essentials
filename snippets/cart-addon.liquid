@@ -1,0 +1,57 @@
+{% unless settings.cart_addon_prod == blank %}
+<style>
+  .addon-cont {
+    display: flex; gap: 10px;
+  }
+  .addon-cont img {
+    width: 120px;
+    max-height: 160px;
+  }
+  .addon-cont .add-to-cart-text__content {
+    display: none;
+  }
+  .addon-cont .add-to-cart-button {
+    width: max-content;
+    padding: 5px 10px;
+  }
+</style>
+<div>
+  {% assign product = settings.cart_addon_prod %}
+  <div class="addon-cont">
+    <img src="{{ settings.cart_addon_prod.featured_image | img_url: 'x500' }}" />
+    <div>
+      <div>{{ settings.cart_addon_prod.title }}</div>
+    </div>
+    {% liquid
+      assign class = 'add-to-cart-button '
+      assign id = 'BuyButtons-ProductSubmitButton-' | append: product.id
+      assign can_add_to_cart = true
+      assign product_form_id = 'CardDrawer-ProductForm-' | append: product.id
+      assign add_to_cart_text = 'Add'
+    %}
+    {%- form 'product', product, id: product_form_id, novalidate: 'novalidate', data-type: 'add-to-cart-form' -%}
+      <input
+        type="hidden"
+        name="id"
+        ref="variantId"
+        value="{{ product.selected_or_first_available_variant.id }}"
+      >
+      <div
+        class="product-form-buttons spacing-style"
+        style="{% render 'spacing-style', settings: block.settings %}"
+      >
+        {% render 'add-to-cart-button',
+          id: id,
+          class: class,
+          can_add_to_cart: can_add_to_cart,
+          product: product,
+          add_to_cart_text: add_to_cart_text
+        %}
+      </div>
+    {%- endform -%}
+  </div>
+</div>
+<script>
+  
+</script>
+{% endunless %}

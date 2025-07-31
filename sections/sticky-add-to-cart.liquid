@@ -1,0 +1,122 @@
+
+<style>
+  #cs-addtocart-sticky {
+    position: fixed;
+    bottom: 20px; /* Add margin to the bottom */
+    left: 50%;
+    transform: translateX(-50%); /* Center horizontally */
+    background: #fff;
+    z-index: 9999;
+    text-align: center;
+    padding: 10px;
+    border: 1px solid #e2e2e2; /* Add a border around the entire div */
+    width: auto; /* Adjust the width to fit content */
+    display: flex;
+    justify-content: space-between;
+    gap: 40px;
+  }
+ 
+  #cs-addtocart-sticky input,
+  #cs-addtocart-sticky button {
+    height: 40px;
+    margin: 0 5px;
+    vertical-align: middle;
+  }
+ 
+  #cs-addtocart-sticky input {
+    width: 60px;
+    text-align: center;
+  }
+ 
+  #cs-addtocart-sticky button {
+    padding: 0 10px;
+    background-color: #007bff; /* Change the button background color */
+    color: #fff; /* Change the button text color */
+    border: none; /* Remove the button border */
+    cursor: pointer; /* Add a pointer cursor */
+  }
+</style>
+ 
+<div id="cs-addtocart-sticky">
+  <div>
+    <strong>{{ product.title }}</strong> ({{ product.price | money }})
+  </div>
+  {% content_for 'block',
+      type: 'variant-picker',
+      id: 'sticky-variant-picker'
+    %}
+  <span
+  class="buy-buttons-block buy-buttons-block--{{ block.id }}"
+  {{ block.shopify_attributes }}
+>
+  {%- assign product_form_id = 'Sticky-BuyButtons-ProductForm-' | append: block.id -%}
+    <product-form-component
+      data-section-id="{{ section.id }}"
+      data-product-id="{{ product.id }}"
+      data-product-url="{{ product.url }}"
+      on:submit="/handleSubmit"
+    >
+      <div
+        class="visually-hidden"
+        aria-live="assertive"
+        role="status"
+        aria-atomic="true"
+        ref="liveRegion"
+      ></div>
+      {%- form 'product', product, id: product_form_id, novalidate: 'novalidate', data-type: 'add-to-cart-form' -%}
+        <input
+          type="hidden"
+          name="id"
+          ref="variantId"
+          value="{{ product.selected_or_first_available_variant.id }}"
+        >
+        <div
+          class="product-form-buttons spacing-style product-form-buttons--stacked"
+          style="{% render 'spacing-style', settings: block.settings %}"
+        >
+          {% content_for 'block',
+            type: 'add-to-cart',
+            id: 'add-to-cart',
+            can_add_to_cart: true,
+            add_to_cart_text: "Add"
+          %}
+          <span
+            class="product-form-text__error hidden"
+            ref="addToCartTextError"
+          >
+            <span class="svg-wrapper product-form-icon--error">
+              {{- 'icon-error.svg' | inline_asset_content -}}
+            </span>
+          </span>
+        </div>
+      {%- endform -%}
+    </product-form-component>
+  </span>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const mainForm = document.querySelector('product-form-component form')
+    const mainQty = mainForm.querySelector('input[name="quantity"]')
+    console.log("mainQty", mainQty)
+    const thisVariantId = document.querySelector('#cs-addtocart-sticky [ref="variantId"]')
+    const thisQty = document.querySelector('#cs-addtocart-sticky [name="quantity"]')
+    document.addEventListener('variant:update', function(data) {
+      const variantId = data?.detail.resource.id
+      thisVariantId.value = variantId
+      console.log("variantId", variantId)
+    })
+  })
+</script>
+
+{% schema %}
+  {
+    "name": "Sticky Add To Cart",
+    "settings": [],
+    "presets": [
+      {
+        "name": "Sticky Add To Cart"
+      }
+    ]
+  }
+{% endschema %}

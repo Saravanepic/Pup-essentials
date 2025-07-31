@@ -1,0 +1,166 @@
+{{ 'collection-info_wrapper.css' | asset_url | stylesheet_tag }}
+{%- style -%}
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+      padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+    }
+  
+    @media screen and (min-width: 750px) {
+      .section-{{ section.id }}-padding {
+        padding-top: {{ section.settings.padding_top }}px;
+        padding-bottom: {{ section.settings.padding_bottom }}px;
+      }
+    }
+{%- endstyle -%}
+
+<div class="section-{{ section.id }}-padding   {{ section.settings.classname }} ">
+    <div class="page-width ">
+        <div class="collection-info_wrapper">
+            <div class="main_content_part">
+                {%- if section.settings.title != blank -%}
+                    <div class="title">
+                            {{ section.settings.title }}
+                    </div>
+                {%- endif -%}
+            </div>
+
+            <div class="collection-info_wrapper_items image-{{ section.id }}" >
+            {%- for block in section.blocks -%}
+                {%- case block.type -%}
+                    {%- when 'info' -%}   
+                        <div class="box_items">
+                          <div class="image_wrapper">
+
+                            {%- if block.settings.svg_option != blank -%}
+                                <div class="svg_option">
+                                        {{ block.settings.svg_option }}
+                                </div>
+                            {% else %}
+                              {% if block.settings.image != blank %} 
+                                    <img src="{{ block.settings.image | image_url }}" 
+                                        alt="{{ block.settings.image.alt }}" 
+                                        width=""
+                                        height=""
+                                        class="img-fluid"
+                                    /> 
+                              {% endif %}  
+                            {%- endif -%}
+                  
+                            
+                          </div>
+                            
+
+                          <div class="content_wrapper">
+                            {%- if block.settings.title != blank -%}
+                                <div class="title">
+                                        {{ block.settings.title }}
+                                </div>
+                            {%- endif -%}
+                            {%- if block.settings.content != blank -%}
+                                <div class="content">
+                                        {{ block.settings.content }}
+                                </div>
+                            {%- endif -%}
+                          </div>
+                            
+                        </div>    
+                    
+                {%- endcase -%}        
+            {%- endfor -%}
+
+            </div>    
+        </div>
+      </div>
+  </div>
+
+  
+ 
+{% schema %}
+{
+    "name": "Global | Collection Info",
+    "class": "section collection-info",
+    "disabled_on": {
+        "groups": [
+            "header",
+            "footer"
+        ]
+    },
+    "limit": 1,
+    "settings": [
+        {
+            "type": "text",
+            "id": "classname",
+            "label": "Class Name"
+        },
+        {
+            "type": "text",
+            "id": "title",
+            "label": "Title"
+        },
+        {
+            "type": "header",
+            "content": "Paddings"
+        },
+        {
+            "type": "range",
+            "id": "padding_top",
+            "min": 0,
+            "max": 100,
+            "step": 4,
+            "unit": "px",
+            "label": "Padding Top",
+            "default": 36
+        },
+        {
+            "type": "range",
+            "id": "padding_bottom",
+            "min": 0,
+            "max": 100,
+            "step": 4,
+            "unit": "px",
+            "label": "Padding Bottom",
+            "default": 36
+        }
+    ],
+    "blocks": [
+        {
+            "type": "info",
+            "name": "Info Box",
+            "limit": 10,
+            "settings": [
+                 {
+                    "type": "text",
+                    "id": "title",
+                    "label": "Title"
+                },
+                {
+                    "type": "textarea",
+                    "id": "content",
+                    "label": "Content"
+                },
+                {
+                    "type": "textarea",
+                    "id": "svg_option",
+                    "label": "SVG Option"           
+                },
+                 {
+                    "type": "image_picker",
+                    "id": "image",
+                    "label": "Image"           
+                }
+            ]
+        }
+    ],
+    "presets": [
+        {
+            "name": "Global | Collection Info"
+        }
+    ]
+}
+{% endschema %}
+  
+  {% stylesheet %}
+  {% endstylesheet %}
+  
+  {% javascript %}
+  {% endjavascript %}

@@ -1,0 +1,348 @@
+{% doc %}
+  @prompt
+    Create a social icon link with option image and link url, Modiy it so i can have 5 options to pass 5 links and images
+
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-social-icons-container-{{ ai_gen_id }} {
+    display: flex;
+    flex-wrap: wrap;
+    gap: {{ block.settings.spacing }}px;
+    justify-content: {{ block.settings.alignment }};
+  }
+
+  .ai-social-icon-{{ ai_gen_id }} {
+    display: inline-block;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+  }
+
+  .ai-social-icon-{{ ai_gen_id }}:hover {
+    transform: scale({{ block.settings.hover_scale }});
+    opacity: {{ block.settings.hover_opacity }};
+  }
+
+  .ai-social-icon-image-{{ ai_gen_id }} {
+    width: {{ block.settings.icon_size }}px;
+    height: {{ block.settings.icon_size }}px;
+    border-radius: {{ block.settings.border_radius }}px;
+    display: block;
+    object-fit: cover;
+  }
+
+  .ai-social-icon-placeholder-{{ ai_gen_id }} {
+    width: {{ block.settings.icon_size }}px;
+    height: {{ block.settings.icon_size }}px;
+    background-color: {{ block.settings.placeholder_color }};
+    border-radius: {{ block.settings.border_radius }}px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ai-social-icon-placeholder-{{ ai_gen_id }} svg {
+    width:60%;
+    height: 60%;
+    color: {{ block.settings.placeholder_icon_color }};
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-social-icons-container-{{ ai_gen_id }} {
+      gap: {{ block.settings.mobile_spacing }}px;
+    }
+    .ai-social-icon-image-{{ ai_gen_id }},
+    .ai-social-icon-placeholder-{{ ai_gen_id }} {
+      width: {{ block.settings.mobile_icon_size }}px;
+      height: {{ block.settings.mobile_icon_size }}px;
+    }
+  }
+{% endstyle %}
+
+<div class="ai-social-icons-container-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  {% for i in (1..5) %}
+    {% liquid
+      assign icon_image_key = 'icon_image_' | append: i
+      assign link_url_key = 'link_url_' | append: i
+      assign aria_label_key = 'aria_label_' | append: i
+      
+      assign icon_image = block.settings[icon_image_key]
+      assign link_url = block.settings[link_url_key]
+      assign aria_label = block.settings[aria_label_key]
+    %}
+    
+    {% if icon_image != blank or link_url != blank %}
+      {% if link_url != blank %}
+        <a
+          href="{{ link_url }}"
+          class="ai-social-icon-{{ ai_gen_id }}"
+          {% if block.settings.open_in_new_tab %}target="_blank" rel="noopener noreferrer"{% endif %}
+          aria-label="{{ aria_label | default: 'Social media link' }}"
+        >
+      {% else %}
+        <div class="ai-social-icon-{{ ai_gen_id }}">
+      {% endif %}
+
+      {% if icon_image %}
+        <img
+          src="{{ icon_image | image_url: width: 200 }}"
+          alt="{{ icon_image.alt | escape }}"
+          class="ai-social-icon-image-{{ ai_gen_id }}"
+          width="{{ block.settings.icon_size }}"
+          height="{{ block.settings.icon_size }}"
+          loading="lazy"
+        >
+      {% else %}
+        <div class="ai-social-icon-placeholder-{{ ai_gen_id }}">
+          {{ 'image' | placeholder_svg_tag }}
+        </div>
+      {% endif %}
+
+      {% if link_url != blank %}
+        </a>
+      {% else %}
+        </div>
+      {% endif %}
+    {% endif %}
+  {% endfor %}
+</div>
+
+{% schema %}
+{
+  "name": "Social Icons",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "alignment",
+      "label": "Alignment",
+      "options": [
+        {
+          "value": "flex-start",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "flex-end",
+          "label": "Right"
+        },
+        {
+          "value": "space-between",
+          "label": "Space between"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "range",
+      "id": "spacing",
+      "min": 4,
+      "max": 40,
+      "step": 4,
+      "unit": "px",
+      "label": "Spacing (desktop)",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "mobile_spacing",
+      "min": 4,
+      "max": 32,
+      "step": 4,
+      "unit": "px",
+      "label": "Spacing (mobile)",
+      "default": 12
+    },
+    {
+      "type": "header",
+      "content": "Icon Style"
+    },
+    {
+      "type": "range",
+      "id": "icon_size",
+      "min": 20,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Icon size (desktop)",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "mobile_icon_size",
+      "min": 16,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "label": "Icon size (mobile)",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "min": 0,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "label": "Border radius",
+      "default": 8
+    },
+    {
+      "type": "header",
+      "content": "Hover Effects"
+    },
+    {
+      "type": "range",
+      "id": "hover_scale",
+      "min": 0.8,
+      "max": 1.2,
+      "step": 0.1,
+      "label": "Hover scale",
+      "default": 1.1
+    },
+    {
+      "type": "range",
+      "id": "hover_opacity",
+      "min": 0.5,
+      "max": 1,
+      "step": 0.1,
+      "label": "Hover opacity",
+      "default": 0.8
+    },
+    {
+      "type": "checkbox",
+      "id": "open_in_new_tab",
+      "label": "Open links in new tab",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Placeholder Style"
+    },
+    {
+      "type": "color",
+      "id": "placeholder_color",
+      "label": "Placeholder background",
+      "default": "#f0f0f0"
+    },
+    {
+      "type": "color",
+      "id": "placeholder_icon_color",
+      "label": "Placeholder icon color",
+      "default": "#cccccc"
+    },
+    {
+      "type": "header",
+      "content": "Social Icon 1"
+    },
+    {
+      "type": "image_picker",
+      "id": "icon_image_1",
+      "label": "Icon image"
+    },
+    {
+      "type": "url",
+      "id": "link_url_1",
+      "label": "Link URL"
+    },
+    {
+      "type": "text",
+      "id": "aria_label_1",
+      "label": "Accessibility label",
+      "info": "Describe the social platform for screen readers"
+    },
+    {
+      "type": "header",
+      "content": "Social Icon 2"
+    },
+    {
+      "type": "image_picker",
+      "id": "icon_image_2",
+      "label": "Icon image"
+    },
+    {
+      "type": "url",
+      "id": "link_url_2",
+      "label": "Link URL"
+    },
+    {
+      "type": "text",
+      "id": "aria_label_2",
+      "label": "Accessibility label",
+      "info": "Describe the social platform for screen readers"
+    },
+    {
+      "type": "header",
+      "content": "Social Icon 3"
+    },
+    {
+      "type": "image_picker",
+      "id": "icon_image_3",
+      "label": "Icon image"
+    },
+    {
+      "type": "url",
+      "id": "link_url_3",
+      "label": "Link URL"
+    },
+    {
+      "type": "text",
+      "id": "aria_label_3",
+      "label": "Accessibility label",
+      "info": "Describe the social platform for screen readers"
+    },
+    {
+      "type": "header",
+      "content": "Social Icon 4"
+    },
+    {
+      "type": "image_picker",
+      "id": "icon_image_4",
+      "label": "Icon image"
+    },
+    {
+      "type": "url",
+      "id": "link_url_4",
+      "label": "Link URL"
+    },
+    {
+      "type": "text",
+      "id": "aria_label_4",
+      "label": "Accessibility label",
+      "info": "Describe the social platform for screen readers"
+    },
+    {
+      "type": "header",
+      "content": "Social Icon 5"
+    },
+    {
+      "type": "image_picker",
+      "id": "icon_image_5",
+      "label": "Icon image"
+    },
+    {
+      "type": "url",
+      "id": "link_url_5",
+      "label": "Link URL"
+    },
+    {
+      "type": "text",
+      "id": "aria_label_5",
+      "label": "Accessibility label",
+      "info": "Describe the social platform for screen readers"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Social Icons"
+    }
+  ]
+}
+{% endschema %}

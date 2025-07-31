@@ -1,0 +1,477 @@
+{% doc %}
+  @prompt
+    Image with headline and subtitle, it shows 3 such section on desktop and slider on mobile (swipable). Give option for whole section background color.
+
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-image-sections-{{ ai_gen_id }} {
+    background-color: {{ block.settings.background_color }};
+    padding: {{ block.settings.section_padding }}px 20px;
+  }
+
+  .ai-image-sections-container-{{ ai_gen_id }} {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .ai-image-sections-grid-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: {{ block.settings.gap }}px;
+  }
+
+  .ai-image-sections-slider-{{ ai_gen_id }} {
+    display: none;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .ai-image-sections-slider-{{ ai_gen_id }}::-webkit-scrollbar {
+    display: none;
+  }
+
+  .ai-image-sections-slider-track-{{ ai_gen_id }} {
+    display: flex;
+    gap: {{ block.settings.gap }}px;
+    padding: 0 20px;
+  }
+
+  .ai-image-section-item-{{ ai_gen_id }} {
+    text-align: {{ block.settings.text_alignment }};
+  }
+
+  .ai-image-section-item-{{ ai_gen_id }} .ai-image-sections-slider-track-{{ ai_gen_id }} {
+    flex: 0 0 280px;
+    scroll-snap-align: start;
+  }
+
+  .ai-image-wrapper-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+    margin-bottom: {{ block.settings.content_spacing }}px;
+    border-radius: {{ block.settings.image_border_radius }}px;
+    overflow: hidden;
+  }
+
+  .ai-image-wrapper-{{ ai_gen_id }} img {
+    width: 100%;
+    height: {{ block.settings.image_height }}px;
+    object-fit: cover;
+    display: block;
+  }
+
+  .ai-image-placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    height: {{ block.settings.image_height }}px;
+    background-color: #f4f4f4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ai-image-placeholder-{{ ai_gen_id }} svg {
+    width: 100%;
+    height: 100%;
+    max-width: 200px;
+    max-height: 200px;
+  }
+
+  .ai-image-content-{{ ai_gen_id }} {
+    color: {{ block.settings.text_color }};
+  }
+
+  .ai-image-headline-{{ ai_gen_id }} {
+    font-size: {{ block.settings.headline_size }}px;
+    font-weight: 600;
+    margin: 0 0 {{ block.settings.headline_spacing }}px 0;
+    color: {{ block.settings.headline_color }};
+  }
+
+  .ai-image-subtitle-{{ ai_gen_id }} {
+    font-size: {{ block.settings.subtitle_size }}px;
+    margin: 0;
+    color: {{ block.settings.subtitle_color }};
+    line-height: 1.5;
+  }
+
+  @media screen and (max-width: 768px) {
+    .ai-image-sections-grid-{{ ai_gen_id }} {
+      display: none;
+    }
+
+    .ai-image-sections-slider-{{ ai_gen_id }} {
+      display: block;
+    }
+
+    .ai-image-section-item-{{ ai_gen_id }} {
+      flex: 0 0 280px;
+      scroll-snap-align: start;
+    }
+  }
+{% endstyle %}
+
+<image-sections-{{ ai_gen_id }}
+  class="ai-image-sections-{{ ai_gen_id }}"
+  {{ block.shopify_attributes }}
+>
+  <div class="ai-image-sections-container-{{ ai_gen_id }}">
+    <div class="ai-image-sections-grid-{{ ai_gen_id }}">
+      {% for i in (1..3) %}
+        {% liquid
+          assign image_key = 'image_' | append: i
+          assign headline_key = 'headline_' | append: i
+          assign subtitle_key = 'subtitle_' | append: i
+          
+          assign image = block.settings[image_key]
+          assign headline = block.settings[headline_key]
+          assign subtitle = block.settings[subtitle_key]
+        %}
+        
+        <div class="ai-image-section-item-{{ ai_gen_id }}">
+          <div class="ai-image-wrapper-{{ ai_gen_id }}">
+            {% if image %}
+              <img
+                src="{{ image | image_url: width: 600 }}"
+                alt="{{ image.alt | escape }}"
+                loading="lazy"
+                width="{{ image.width }}"
+                height="{{ image.height }}"
+              >
+            {% else %}
+              <div class="ai-image-placeholder-{{ ai_gen_id }}">
+                {{ 'image' | placeholder_svg_tag }}
+              </div>
+            {% endif %}
+          </div>
+          
+          <div class="ai-image-content-{{ ai_gen_id }}">
+            {% if headline != blank %}
+              <h3 class="ai-image-headline-{{ ai_gen_id }}">{{ headline }}</h3>
+            {% endif %}
+            
+            {% if subtitle != blank %}
+              <p class="ai-image-subtitle-{{ ai_gen_id }}">{{ subtitle }}</p>
+            {% endif %}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+
+    <div class="ai-image-sections-slider-{{ ai_gen_id }}">
+      <div class="ai-image-sections-slider-track-{{ ai_gen_id }}">
+        {% for i in (1..3) %}
+          {% liquid
+            assign image_key = 'image_' | append: i
+            assign headline_key = 'headline_' | append: i
+            assign subtitle_key = 'subtitle_' | append: i
+            
+            assign image = block.settings[image_key]
+            assign headline = block.settings[headline_key]
+            assign subtitle = block.settings[subtitle_key]
+          %}
+          
+          <div class="ai-image-section-item-{{ ai_gen_id }}">
+            <div class="ai-image-wrapper-{{ ai_gen_id }}">
+              {% if image %}
+                <img
+                  src="{{ image | image_url: width: 400 }}"
+                  alt="{{ image.alt | escape }}"
+                  loading="lazy"
+                  width="{{ image.width }}"
+                  height="{{ image.height }}"
+                >
+              {% else %}
+                <div class="ai-image-placeholder-{{ ai_gen_id }}">
+                  {{ 'image' | placeholder_svg_tag }}
+                </div>
+              {% endif %}
+            </div>
+            
+            <div class="ai-image-content-{{ ai_gen_id }}">
+              {% if headline != blank %}
+                <h3 class="ai-image-headline-{{ ai_gen_id }}">{{ headline }}</h3>
+              {% endif %}
+              
+              {% if subtitle != blank %}
+                <p class="ai-image-subtitle-{{ ai_gen_id }}">{{ subtitle }}</p>
+              {% endif %}
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</image-sections-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class ImageSections{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+      }
+
+      connectedCallback() {
+        this.slider = this.querySelector('.ai-image-sections-slider-{{ ai_gen_id }}');
+        this.setupTouchEvents();
+      }
+
+      setupTouchEvents() {
+        if (!this.slider) return;
+
+        let isDown = false;
+        let startX;
+        let scrollLeft;
+
+        this.slider.addEventListener('mousedown', (e) => {
+          isDown = true;
+          startX = e.pageX - this.slider.offsetLeft;
+          scrollLeft = this.slider.scrollLeft;
+          this.slider.style.cursor = 'grabbing';
+        });
+
+        this.slider.addEventListener('mouseleave', () => {
+          isDown = false;
+          this.slider.style.cursor = 'grab';
+        });
+
+        this.slider.addEventListener('mouseup', () => {
+          isDown = false;
+          this.slider.style.cursor = 'grab';
+        });
+
+        this.slider.addEventListener('mousemove', (e) => {
+          if (!isDown) return;
+          e.preventDefault();
+          const x = e.pageX - this.slider.offsetLeft;
+          const walk = (x - startX) * 2;
+          this.slider.scrollLeft = scrollLeft - walk;
+        });
+
+        this.slider.addEventListener('touchstart', (e) => {
+          startX = e.touches[0].pageX - this.slider.offsetLeft;
+          scrollLeft = this.slider.scrollLeft;
+        });
+
+        this.slider.addEventListener('touchmove', (e) => {
+          const x = e.touches[0].pageX - this.slider.offsetLeft;
+          const walk = (x - startX) * 2;
+          this.slider.scrollLeft = scrollLeft - walk;
+        });
+      }
+    }
+
+    customElements.define('image-sections-{{ ai_gen_id }}', ImageSections{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Image Sections",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "section_padding",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Section padding",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "min": 10,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "label": "Gap between items",
+      "default": 30
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "Text alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "header",
+      "content": "Images"
+    },
+    {
+      "type": "range",
+      "id": "image_height",
+      "min": 150,
+      "max": 400,
+      "step": 10,
+      "unit": "px",
+      "label": "Image height",
+      "default": 250
+    },
+    {
+      "type": "range",
+      "id": "image_border_radius",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Image border radius",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "content_spacing",
+      "min": 10,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Spacing below image",
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "color",
+      "id": "headline_color",
+      "label": "Headline color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "headline_size",
+      "min": 14,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "label": "Headline size",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "headline_spacing",
+      "min": 5,
+      "max": 25,
+      "step": 1,
+      "unit": "px",
+      "label": "Spacing below headline",
+      "default": 10
+    },
+    {
+      "type": "color",
+      "id": "subtitle_color",
+      "label": "Subtitle color",
+      "default": "#666666"
+    },
+    {
+      "type": "range",
+      "id": "subtitle_size",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Subtitle size",
+      "default": 14
+    },
+    {
+      "type": "header",
+      "content": "Section 1"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_1",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "headline_1",
+      "label": "Headline",
+      "default": "Feature One"
+    },
+    {
+      "type": "textarea",
+      "id": "subtitle_1",
+      "label": "Subtitle",
+      "default": "Describe your first feature or benefit here."
+    },
+    {
+      "type": "header",
+      "content": "Section 2"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_2",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "headline_2",
+      "label": "Headline",
+      "default": "Feature Two"
+    },
+    {
+      "type": "textarea",
+      "id": "subtitle_2",
+      "label": "Subtitle",
+      "default": "Describe your second feature or benefit here."
+    },
+    {
+      "type": "header",
+      "content": "Section 3"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_3",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "headline_3",
+      "label": "Headline",
+      "default": "Feature Three"
+    },
+    {
+      "type": "textarea",
+      "id": "subtitle_3",
+      "label": "Subtitle",
+      "default": "Describe your third feature or benefit here."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Image Sections"
+    }
+  ],
+  "tag": null
+}
+{% endschema %}

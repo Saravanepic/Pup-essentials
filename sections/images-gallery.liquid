@@ -1,0 +1,186 @@
+{% comment %}
+  Follow Along Gallery Section
+  Responsive gallery that shows 4 images on desktop, 2 on mobile
+{% endcomment %}
+
+<style>
+  .follow-along-section {
+    padding: 0;
+    max-width:100%;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .follow-along-title {
+        font-family: Trade Gothic Next LT Pro;
+    font-weight: 800;
+    font-size: 32px;
+    line-height: 100%;
+    letter-spacing: 0.36px !important;
+    text-align: center;
+    text-transform: uppercase;
+    margin:0 0 10px
+  }
+
+  .follow-along-handle {
+    font-size: 1.1rem;
+    color: #000;
+    margin-bottom: 30px;
+    display: block;
+  }
+
+  .follow-along-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    margin-bottom: 0;
+  }
+
+  .follow-along-item {
+    aspect-ratio: 1;
+    overflow: hidden;
+    border-radius: 0px;
+    position: relative;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+  }
+
+  .follow-along-item:hover {
+    transform: scale(0.98);
+  }
+  .follow-along-item a {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+  }
+
+  .follow-along-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  /* Mobile Responsive */
+  @media (max-width: 768px) {
+    
+
+    .follow-along-title {
+      font-size: 2rem;
+      letter-spacing: 1px;
+    }
+
+    .follow-along-grid {
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+    }
+
+    .follow-along-item:hover {
+      transform: scale(1.02);
+    }
+  }
+
+  @media (max-width: 480px) {
+    .follow-along-title {
+      font-size: 1.5rem;
+    }
+
+    .follow-along-handle {
+      font-size: 1rem;
+    }
+
+    /* .follow-along-grid {
+      gap: 10px;
+    } */
+  }
+</style>
+
+<section class="follow-along-section">
+  <h2 class="follow-along-title">{{ section.settings.title | default: 'FOLLOW ALONG' }}</h2>
+  {% assign insta_handle = section.settings.instagram_handle | default: '@pupsentials' %}
+  <a href="https://instagram.com/{{ insta_handle }}" target="_blank" class="follow-along-handle"><p>{{ insta_handle }}</p></a>
+  
+  <div class="follow-along-grid">
+    {% for block in section.blocks %}
+      <div class="follow-along-item" {{ block.shopify_attributes }}>
+        <a href="https://instagram.com/{{ insta_handle }}" target="_blank"></a>
+        {% if block.settings.image %}
+          
+          <img 
+            src="{{ block.settings.image | img_url: '400x400' }}" 
+            alt="{{ block.settings.alt_text | default: 'Follow along image' }}"
+            loading="lazy"
+          >
+        {% else %}
+          <div style="background: #f5f5f5; display: flex; align-items: center; justify-content: center; height: 100%; color: #999;">
+            Add Image
+          </div>
+        {% endif %}
+      </div>
+    {% endfor %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Images Gallery",
+  "tag": "section",
+  "class": "section_full",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section Title",
+      "default": "FOLLOW ALONG"
+    },
+    {
+      "type": "text",
+      "id": "instagram_handle",
+      "label": "Instagram Handle",
+      "default": "@pupsentials"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "image",
+      "name": "Gallery Image",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "alt_text",
+          "label": "Alt Text",
+          "info": "Describe the image for accessibility"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Images Gallery",
+      "blocks": [
+        {
+          "type": "image"
+        },
+        {
+          "type": "image"
+        },
+        {
+          "type": "image"
+        },
+        {
+          "type": "image"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
