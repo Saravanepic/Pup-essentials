@@ -378,14 +378,17 @@
       assign model_name = product.metafields.custom.model_name.value
     endif
   %}
-  <div class="size-desc-tag">
-    
-  </div>
+  
+  
+    <div class="size-desc-tag">
+    </div>  
+  
   
 </media-gallery>
 
 <script>
-  const productFitJson = JSON.parse(`{{ product.metafields.custom.custom_size_fit_json.value | json }}`)
+
+     const productFitJson = JSON.parse(`{{ product.metafields.custom.custom_size_fit_json.value | json }}`)
   console.log("productFitJson", productFitJson)
   const sizes = ['L', 'S', 'XL', 'XXL', 'M']
   const sizeDescTag = document.querySelector('.size-desc-tag')
@@ -401,9 +404,19 @@
     if(found) {
       sizeDescTag.innerText = found.value
       updateSizeFitAccordian(found.value)
+    } else {
+      hideShowTag(false)
     }
   } else {
-    sizeDescTag.style.display = 'none'
+    hideShowTag(false)
+  }
+  function hideShowTag(show) {
+    const sizeDescTag = document.querySelector('.size-desc-tag')
+    if(show) {
+      sizeDescTag.style.display = 'block'
+    } else {
+      sizeDescTag.style.display = 'none'
+    }
   }
   document.addEventListener('variant:update', function(data) {
     const sizeDescTag = document.querySelector('.size-desc-tag')
@@ -429,6 +442,7 @@
     console.log("variantDetails", variantDetails)
   })
 
+  
   function showValidImage(color) {
     if(!color) return
     const list = document.querySelectorAll('.product-media-container--image')
@@ -472,7 +486,7 @@
     margin-top: 20px;
     font-family: GT America Trial;
     font-weight: 400;
-    font-size: 11px;
+    font-size: 12px;
     line-height: 15px;
     margin-right: 40px;
   }

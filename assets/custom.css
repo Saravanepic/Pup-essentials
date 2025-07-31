@@ -62,6 +62,19 @@ p{
   line-height: 130%!important;
 }
 
+
+.cart__ctas .cart__checkout-button {
+    font-family: 'Trade Gothic Next LT Pro';
+    font-weight: 800;
+    font-size: 16px;
+    line-height: 100%;
+    letter-spacing: 0.36px;
+    text-align: center;
+    text-transform: uppercase;
+    max-height: 48px;
+}
+
+
 .facets__clear-all-link ,
 .pills__pill {
     font-family: "GT America Trial";
@@ -123,6 +136,10 @@ p{
 }
 
 /* cart_note */
+cart-note {
+    border-bottom: 1px solid rgba(0 0 0 / 0.06);
+}
+
 .cart_note {
     color: #767676;
     font-family: 'GT America Trial';
@@ -132,6 +149,27 @@ p{
     letter-spacing: 0;
     border-top: 1px solid #D9D9D9;
     padding: 13px;
+}
+
+.cart-note-gift  details[open] summary.cart-note__summary {
+    padding-bottom: 0;
+}
+.cart-note-gift .cart-note__inner span {
+    display: block;
+    font-weight: 400;
+    font-size: 10px;
+    line-height: 13px;
+    letter-spacing: 0;
+    font-family: 'GT America Trial';
+    margin: 0;
+}
+
+.cart-note-gift .cart-note__inner label {
+    font-family: 'GT America Trial';
+    font-weight: 700;
+    font-size: 10px;
+    line-height: 15px;
+    letter-spacing: 0;
 }
 
 /*  */
@@ -447,6 +485,7 @@ product-card:hover a.button_customize_card{
     font-size: 11px!important;
     line-height: 15px!important;
     letter-spacing: 0;
+    text-transform: uppercase;
 }
 
 
@@ -507,10 +546,10 @@ product-card:hover a.button_customize_card{
     margin-right: 12px;
 }
 
+.popup-link__button,
 #sizecustom,
 .product-information__grid .accordion p {
     font-size: 14px!important;
-    line-height: 100%!important;
       font-family: "GT America Trial" !important;
 }
 .product-information__grid .accordion accordion-custom:nth-child(1) details.details {
@@ -571,6 +610,32 @@ product-card:hover a.button_customize_card{
     font-family: 'GT America Trial'!important;
     font-weight: 700!important;
 }
+
+/*  */
+.label_wrapper.size_label {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+}
+.label_wrapper.size_label  .size_info {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 3px;
+}
+
+.label_wrapper.size_label  .size_info {
+    font-family: 'GT America Trial';
+    font-weight: 400;
+    font-size: 9px;
+    line-height: 15px;
+    letter-spacing: 0;
+    text-align: right;
+    text-decoration: underline;
+    text-decoration-style: solid;
+}
+
+
 
 
 /*  */
@@ -642,14 +707,14 @@ details[open] .sorting-filter__options .sorting-filter__option {
     line-height: 100%;
     max-width: 550px;
 }
-.subtext_heading  p {
+.subtext_heading p {
     font-family: Trade Gothic Next LT Pro;
     font-weight: 800;
     font-size: 20px!important;
     line-height: 100%;
     letter-spacing: 0.36px!important;
     text-align: center;
-    box-shadow: 0px 4px 4px 0px #00000040;
+    /* box-shadow: 0px 4px 4px 0px #00000040; */
 }
 .eyebrow_text {
     padding: 0;

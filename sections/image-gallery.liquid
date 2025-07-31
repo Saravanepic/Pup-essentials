@@ -13,6 +13,11 @@
     }
 {%- endstyle -%}
 
+
+{% assign product_image_slider = product.metafields.custom.product_image_slider %}
+
+
+
 <div class="section-{{ section.id }}-padding   {{ section.settings.classname }} ">
     <div class="page-width ">
         <div class="image-gallery_wrapper">
@@ -30,25 +35,49 @@
             </div>
 
             <div class="image-gallery_wrapper_items image-{{ section.id }}" >
-            {%- for block in section.blocks -%}
-                {%- case block.type -%}
-                    {%- when 'image' -%}   
+
+              {% if product_image_slider != blank %}
+                  {% if product_image_slider.value %}
+                      {% for image in product_image_slider.value %}
                         <div class="box_items box_item_product">
-                            {% if block.settings.image != blank %} 
-                                <div class="box_item_image">
-                                    <img src="{{ block.settings.image | image_url }}" 
-                                        alt="{{ block.settings.image.alt }}" 
-                                        width=""
-                                        height=""
-                                        class="img-fluid"
-                                    /> 
-                                </div>
-                            {% endif %}
+                           <div class="box_item_image">
+                                                        <img src="{{ image | image_url }}" 
+                                                            alt="{{ product.title | escape }}"
+                                                            width=""
+                                                            height=""
+                                                            class="img-fluid"
+                                                        /> 
+                          </div>
+                          </div>
+                      {% endfor %}
+                   {% endif %}
+                  
+                {% else %}  
+
+                    {%- for block in section.blocks -%}
+                        {%- case block.type -%}
+                            {%- when 'image' -%}   
+                                <div class="box_items box_item_product">
+                                    {% if block.settings.image != blank %} 
+                                        <div class="box_item_image">
+                                            <img src="{{ block.settings.image | image_url }}" 
+                                                alt="{{ block.settings.image.alt }}" 
+                                                width=""
+                                                height=""
+                                                class="img-fluid"
+                                            /> 
+                                        </div>
+                                    {% endif %}
+                                    
+                                </div>    
                             
-                        </div>    
-                    
-                {%- endcase -%}        
-            {%- endfor -%}
+                        {%- endcase -%}        
+                    {%- endfor -%}
+              
+                {% endif %}
+
+              
+          
 
             </div>    
         </div>

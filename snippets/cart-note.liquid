@@ -36,3 +36,44 @@
     </details>
   </accordion-custom>
 </cart-note>
+
+<!-- ADD A GIFT MESSAGE  -->
+<cart-note style="display: flex;">
+  <accordion-custom class="cart-note cart-note-gift">
+    <details
+      class="details"
+    >
+      <summary class="cart-note__summary">
+        <span class="cart-note__label h6">
+          ADD A GIFT MESSAGE
+        </span>
+
+        <span class="svg-wrapper icon-plus">
+          {{- 'icon-plus.svg' | inline_asset_content -}}
+        </span>
+      </summary>
+
+      <div class="details-content cart-note__inner">
+        <span>Prices will be excluded. Please note, all items will ship together.</span>
+        <label
+          for="cart-note-gift"
+          class=""
+        >
+          Your Message:
+        </label>
+        <textarea
+          form="cart-form"
+          on:input="/updateCartNote"
+          id="cart-note-gift"
+          class="cart-note__instructions"
+          name="note"
+          maxlength="200"
+        >
+          
+        </textarea>
+      </div>
+    </details>
+  </accordion-custom>
+</cart-note>
+
+<!--  -->

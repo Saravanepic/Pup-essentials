@@ -130,7 +130,7 @@ File: sections/timeline.liquid
 .timeline-section {
   padding: 80px 0;
   background-color: var(--background-color, #f8f8f8);
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  /* font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; */
   overflow-x: hidden;
 }
 
@@ -143,9 +143,9 @@ File: sections/timeline.liquid
 .timeline-header {
   text-align: center;
   margin-bottom: 10px;
-  opacity: 0;
+  opacity: 1;
   transform: translateY(30px);
-  animation: fadeInUp 0.8s ease-out forwards;
+  /* animation: fadeInUp 0.8s ease-out forwards; */
   z-index:2;
 }
 
@@ -182,7 +182,7 @@ File: sections/timeline.liquid
 .timeline-wrapper {
   position: relative;
   max-width: 100%;
-  margin: 0 auto;
+  margin: 30px auto 0;
   min-height: 800px; /* Ensure minimum height for tight spacing */
 }
 
@@ -192,14 +192,16 @@ File: sections/timeline.liquid
   top: 0;
   bottom: 0;
   width: 3px;
-  background: linear-gradient(to bottom, 
+  /* background: linear-gradient(to bottom, 
     var(--primary-color, #333) 0%, 
     var(--primary-color, #333) var(--line-progress, 0%), 
     #ddd var(--line-progress, 0%), 
-    #ddd 100%);
-  transform: translateX(-50%);
+    #ddd 100%); */
+  /* transform: translateX(-50%); */
   z-index: 1;
-  transition: all 0.3s ease;
+      background: black;
+
+  /* transition: all 0.3s ease; */
 }
 
 .timeline-item {
@@ -207,8 +209,8 @@ File: sections/timeline.liquid
   display: flex;
   align-items: flex-start; /* Changed from center to flex-start */
   z-index: 2;
-  opacity: 0;
-  transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  opacity: 1;
+  /* transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1); */
   width: 50%; /* Set width to 50% for left/right positioning */
   padding: 15px 0; /* Reduced padding for tighter spacing */
 }
@@ -244,14 +246,14 @@ File: sections/timeline.liquid
   left: 0;
   justify-content: flex-end;
   text-align: right;
-  transform: translateX(-100px);
+  /* transform: translateX(-100px); */
 }
 
 .timeline-item.right {
   right: 0;
   justify-content: flex-start;
   text-align: left;
-  transform: translateX(100px);
+  /* transform: translateX(100px); */
 }
 
 .timeline-item.animate-in {
@@ -286,20 +288,21 @@ File: sections/timeline.liquid
     top: 30px;
     width: 13px;
     height: 13px;
-    background-color: #ddd;
+    /* background-color: #ddd; */
+  background-color: black;
     border-radius: 50%;
-    transform: translate(-50%, -50%) scale(0.7);
+    transform: translate(-50%, -50%) scale(1);
     z-index: 4;
-    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    /* transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1); */
     border: none;
 }
 
 .timeline-item.left .timeline-dot {
-      left: calc(100% + 0px); /* Align to center line from left side */
+      left: calc(100% + 2px); /* Align to center line from left side */
 }
 
 .timeline-item.right .timeline-dot {
-  left:0px; /* Align to center line from right side */
+  left:2px; /* Align to center line from right side */
 }
 
 .timeline-item.animate-in .timeline-dot {
@@ -323,9 +326,9 @@ File: sections/timeline.liquid
   height: 2px;
   background-color: var(--primary-color, #333);
   z-index: 3;
-  transform: translateY(-50%) scaleX(0);
-  transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-  transition-delay: 0.3s;
+  /* transform: translateY(-50%) scaleX(0); */
+  /* transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1); */
+  /* transition-delay: 0.3s; */
 }
 
 .timeline-item.left .timeline-connector {
@@ -436,7 +439,7 @@ File: sections/timeline.liquid
 }
 
 .timeline-image {
-  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  /* transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); */
   /* border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 3px 15px rgba(0,0,0,0.1);  */
@@ -455,13 +458,17 @@ File: sections/timeline.liquid
   transition: transform 0.3s ease;
 }
 
+.timeline-item:last-child .timeline-image img {
+    min-width: auto;
+}
+
 .timeline-footer {
   text-align: center;
   margin-top: 120px; /* Adjusted for absolute positioning */
   padding-top: 40px;
-  opacity: 0;
+  opacity: 1;
   transform: translateY(30px);
-  transition: all 0.8s ease;
+  /* transition: all 0.8s ease; */
 }
 
 .timeline-footer.animate-in {
@@ -621,9 +628,9 @@ document.addEventListener('DOMContentLoaded', function() {
   // Apply custom vertical offsets on load
   timelineItems.forEach((item, index) => {
     const offset = item.getAttribute('data-vertical-offset') || '0';
-    if (offset !== '0') {
-      item.style.transform += ` translateY(${offset}px)`;
-    }
+    // if (offset !== '0') {
+    //   item.style.transform += ` translateY(${offset}px)`;
+    // }
   });
   
   // Intersection Observer for animations
@@ -635,8 +642,8 @@ document.addEventListener('DOMContentLoaded', function() {
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
-        entry.target.classList.add('animate-in');
-        updateTimelineProgress();
+        // entry.target.classList.add('animate-in');
+        // updateTimelineProgress();
       }
     });
   }, observerOptions);
@@ -659,7 +666,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (totalItems > 0) {
       const progress = (animatedItems.length / totalItems) * 100;
       if (timelineLine) {
-        timelineLine.style.setProperty('--line-progress', progress + '%');
+        // timelineLine.style.setProperty('--line-progress', progress + '%');
       }
     }
   }
@@ -669,7 +676,7 @@ document.addEventListener('DOMContentLoaded', function() {
     item.style.transitionDelay = (index * 0.1) + 's';
     const connector = item.querySelector('.timeline-connector');
     if (connector) {
-      connector.style.transitionDelay = (index * 0.1 + 0.3) + 's';
+      // connector.style.transitionDelay = (index * 0.1 + 0.3) + 's';
     }
   });
   
@@ -681,7 +688,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const rate = scrolled * -0.01; /* Reduced parallax effect */
     
     if (timelineLine) {
-      timelineLine.style.transform = `translateX(-50%) translateY(${rate}px)`;
+      // timelineLine.style.transform = `translateX(-50%) translateY(${rate}px)`;
     }
     
     ticking = false;

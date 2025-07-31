@@ -60,14 +60,22 @@
   }
 
   .free-shipping-achieved {
-      background: linear-gradient(90deg, #27ae60 0%, #2ecc71 100%) !important;
+      /* background: linear-gradient(90deg, #27ae60 0%, #2ecc71 100%) !important; */
+        background: #C6A877;
+    border: 1px solid black;
   }
 
   .achievement-message {
       text-align: center;
-      color: #27ae60;
+      /* color: #27ae60;
       font-weight: bold;
-      font-size: 13px;
+      font-size: 13px; */
+    font-family: 'GT America Trial';
+    font-weight: 400;
+    font-size: 11px;
+    letter-spacing: 0;
+    text-align: center;
+    margin:0 0 10px;
       height:0;
       opacity: 0;
       transition: opacity 0.3s ease;
@@ -85,14 +93,16 @@
     <div class="shipping-text">
         You're <span class="amount">{{ cart.currency.symbol }}<span id="remaining-amount"></span></span> away from FREE SHIPPING!
     </div>
+
+    <div class="achievement-message" id="achievement-msg">
+        Congrats! You get FREE SHIPPING! 
+    </div>
     
     <div class="progress-bar-container">
         <div class="progress-bar-fill" id="progress-fill"></div>
     </div>
     
-    <div class="achievement-message" id="achievement-msg">
-        🎉 You've qualified for FREE SHIPPING! 🎉
-    </div>
+    
 </div>
 <script>
     

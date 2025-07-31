@@ -25,7 +25,7 @@
                data-block-id="{{ block.id }}" 
                data-video-index="{{ forloop.index0 }}">
             
-            <div class="video-wrapper">
+            <div class="video-wrapper" id="video_{{ forloop.index0 }}">
               {{ block.settings.video | video_tag: image_size: '2500x', autoplay: false, loop: false, muted: true, controls: false, class: 'carousel-video', playsinline: true }}
               
               
@@ -336,6 +336,7 @@ document.addEventListener('DOMContentLoaded', function() {
   let autoPlayInterval = null;
   let userInteracted = false;
   let isTransitioning = false;
+  let hasAutoPlayedFirst = false; // Track if first video has been auto-played
   
   // Initialize videos
   function initializeVideos() {
@@ -473,20 +474,27 @@ document.addEventListener('DOMContentLoaded', function() {
     }, 5000); // 5 seconds
   }
   
-  // Initialize everything
-  if (videos.length > 0) {
-    initializeVideos();
+  // Auto-play first video when 20% visible
+  function tryAutoPlayFirstVideo() {
+    if (hasAutoPlayedFirst || userInteracted || videos.length === 0) return;
     
-    // Start first video automatically
     const firstVideo = videos[0];
     if (firstVideo) {
       firstVideo.play().then(() => {
+        hasAutoPlayedFirst = true;
         currentVideoIndex = 0;
         if (videos.length > 1) {
           startAutoPlay();
         }
       }).catch(console.error);
     }
+  }
+  
+  // Initialize everything
+  if (videos.length > 0) {
+    initializeVideos();
+    // Note: We're not auto-playing the first video here anymore
+    // It will be handled by the intersection observer
   }
   
   // Handle visibility change (pause when tab is not active)
@@ -498,35 +506,52 @@ document.addEventListener('DOMContentLoaded', function() {
         }
       });
       clearInterval(autoPlayInterval);
-    } else if (!userInteracted && videos.length > 1) {
+    } else if (!userInteracted && hasAutoPlayedFirst && videos.length > 1) {
       startAutoPlay();
     }
   });
   
-  // Handle intersection observer for better performance
+  // Handle intersection observer for visibility-based auto-play and performance
   if ('IntersectionObserver' in window) {
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
-        if (!entry.isIntersecting) {
-          // Pause videos when section is not visible
+        if (entry.isIntersecting && entry.intersectionRatio >= 0.2) {
+          // Section is at least 20% visible - try to auto-play first video
+          if (!hasAutoPlayedFirst && !userInteracted) {
+            setTimeout(() => {
+              tryAutoPlayFirstVideo();
+            }, 300); // Small delay to ensure smooth loading
+          } else if (hasAutoPlayedFirst && !userInteracted && videos.length > 1) {
+            // Resume auto-play cycle if it was interrupted
+            setTimeout(() => {
+              if (!userInteracted && autoPlayInterval === null) {
+                startAutoPlay();
+              }
+            }, 1000);
+          }
+        } else {
+          // Section is not sufficiently visible - pause videos and stop auto-play
           videos.forEach(video => {
             if (!video.paused) {
               video.pause();
             }
           });
           clearInterval(autoPlayInterval);
-        } else if (!userInteracted && videos.length > 1) {
-          // Resume auto-play when section becomes visible
-          setTimeout(() => {
-            if (!userInteracted) {
-              startAutoPlay();
-            }
-          }, 1000);
+          autoPlayInterval = null;
         }
       });
-    }, { threshold: 0.1 });
+    }, { 
+      threshold: [0.2], // Trigger when 20% visible
+      rootMargin: '0px 0px -10px 0px' // Small margin to avoid edge cases
+    });
     
     observer.observe(section);
+  } else {
+    // Fallback for browsers without IntersectionObserver
+    // Auto-play immediately (old behavior)
+    if (videos.length > 0) {
+      tryAutoPlayFirstVideo();
+    }
   }
 });
 </script>

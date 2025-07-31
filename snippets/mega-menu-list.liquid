@@ -103,11 +103,19 @@
             class="mega-menu__link"
             role="menuitem"
           >
+              {% if image_1.type == 'page_link' %}
+              {{
+                image_1.object.metafields.custom.menu_image
+                | image_url: width: 1024
+                | image_tag: loading: 'lazy', class: 'mega-menu__link-image', sizes: 'auto'
+              }}
+              {% else %}
               {{
                 image_1.object.featured_image
                 | image_url: width: 1024
                 | image_tag: loading: 'lazy', class: 'mega-menu__link-image', sizes: 'auto'
               }}
+              {% endif %}
             <span
               class="mega-menu__link-title"
             >
@@ -122,11 +130,19 @@
             class="mega-menu__link"
             role="menuitem"
           >
+              {% if image_2.type == 'page_link' %}
+              {{
+                image_2.object.metafields.custom.menu_image
+                | image_url: width: 1024
+                | image_tag: loading: 'lazy', class: 'mega-menu__link-image', sizes: 'auto'
+              }}
+              {% else %}
               {{
                 image_2.object.featured_image
                 | image_url: width: 1024
                 | image_tag: loading: 'lazy', class: 'mega-menu__link-image', sizes: 'auto'
               }}
+              {% endif %}
             <span
               class="mega-menu__link-title"
             >
