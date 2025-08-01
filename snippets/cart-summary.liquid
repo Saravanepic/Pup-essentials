@@ -65,7 +65,7 @@
         {% comment %} Used by payment_terms web component {% endcomment %}
         data-cart-subtotal
       >
-        {{ total_price }}
+        <span class="ymq_cart_total_price">{{ total_price }}</span>
       </text-component>
     </span>
     {% if settings.show_installments %}

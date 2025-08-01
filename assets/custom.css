@@ -193,6 +193,11 @@ cart-note {
     margin: 0 0 5px;
 }
 
+/* Hide Slide Show */
+slideshow-controls[controls-on-media][pagination-position=center] {
+    display: none;
+}
+
 /*  */
 /* Header */
 @media all and (min-width:1100px){
@@ -490,6 +495,16 @@ product-card:hover a.button_customize_card{
 
 
 /* PDP */
+
+.product-information__grid .button[id^=BuyButtons-ProductSubmitButton-] {
+    background: black;
+}
+
+.product-information__grid .add-to-cart-text {
+    color: white;
+}
+
+
 @media all and (min-width:1200px){
   .product-information__grid {
     display: grid!important;
@@ -840,10 +855,31 @@ a.button_custom {
     margin-left: auto;
 }
 .ymq-box {
+      background: white;
+    padding: 0;
+    border: none;
+    margin: 0 !important;
+}
+.ymq-options-box {
+    padding: 0!important;
+}
+.ymq-dropdown>span {
     background: #f9f9f9;
-    padding: 18px;
-    border: 1px solid black;
-    margin: 0!important;
+    opacity: 1;
+    border: 1px solid #C4C4C4;
+    box-shadow: none !important;
+    font-family: GT America Trial;
+    font-size: 12px;
+    padding-top: 7px;
+    padding-bottom: 7px;
+    border-radius: 4px;
+}
+.ymq_option_text_span {
+    font-family: Trade Gothic Next LT Pro;
+    font-weight: 800;
+    font-size: 17px;
+    line-height: 21px;
+    text-transform: uppercase;
 }
 .ymq-option-value {
     font-family: 'GT America Trial';
@@ -986,6 +1022,28 @@ h2.jdgm-rev-widg__title {
 
 /* Responive */
 @media all and (max-width:767px){
+
+    /*  */
+.product-information__media {
+    position: relative;
+}
+
+.product-information__media::after {
+    content: "Slide to Right";
+    opacity: 1;
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: #ede5db;
+    z-index: 1;
+    color: black;
+    font-size: 12px;
+    font-family: 'GT America Trial';
+    padding: 4px 10px;
+    border-radius: 5px;
+    line-height: normal;
+}
+    /*  */
   li.handle_meet-the-founders,
   li.handle_jean-jacket,li.handle_the-crewneck {
     display: none!important;

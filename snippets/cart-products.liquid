@@ -215,13 +215,13 @@
                   <div>
                     {% if item.original_price != item.final_price %}
                       <span class="visually-hidden">{{ 'content.price_sale' | t }}</span>
-                      <span>{{ item.final_price | money }}</span>
+                      <span><span data-ymq-item-key="{{ item.key }}" class="ymq_item_final_price">{{ item.final_price | money }}</span></span>
                       <span class="visually-hidden">{{ 'content.price_regular' | t }}</span>
                       <s class="compare-at-price">
                         {% if item.variant.compare_at_price > item.original_price %}
-                          {{ item.variant.compare_at_price | money }}
+                          <span data-price="{{ item.variant.compare_at_price }}" data-ymq-item-key="{{ item.key }}" class="ymq_item_price">{{ item.variant.compare_at_price | money }}</span>
                         {% else %}
-                          {{ item.original_price | money }}
+                          <span data-ymq-item-key="{{ item.key }}" class="ymq_item_original_price">{{ item.original_price | money }}</span>
                         {% endif %}
                       </s>
                     {% else %}
@@ -231,7 +231,7 @@
                         <span class="visually-hidden">{{ 'content.price' | t }}</span>
                       {% endif %}
 
-                      <span>{{ item.original_price | money }}</span>
+                      <span><span data-ymq-item-key="{{ item.key }}" class="ymq_item_original_price">{{ item.original_price | money }}</span></span>
 
                       {% if item.variant.compare_at_price > item.original_price %}
                         <span class="visually-hidden">{{ 'content.price_regular' | t }}</span>
@@ -303,7 +303,7 @@
                       assign unit_price = item.unit_price | money
                     endif
                   -%}
-                  <text-component value="{{ price }}">{{ price }}</text-component>
+                  <text-component value="{{ price }}"><span data-ymq-item-key="{{ item.key }}" class="ymq_item_final_line_price">{{ price }}</span></text-component>
                   {%- if item.variant.available and item.unit_price_measurement -%}
                     <div class="cart-items__price-unit cart-secondary-typography">
                       {% render 'unit-price', variant: item.variant, price: unit_price %}

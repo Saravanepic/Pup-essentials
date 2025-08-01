@@ -1,19 +1,28 @@
+{% include 'shogun-content-handler' %}
 <!doctype html>
 <html
   class="no-js{% if request.design_mode %} shopify-design-mode{% endif %}"
   lang="{{ request.locale.iso_code }}"
 >
-  <head>{% include 'ymq-option-initializer' %}
+  <head>
 
-    {{ 'base.css' | asset_url | stylesheet_tag }}
-    
     {%- if settings.favicon != blank -%}
       <link
         rel="icon"
         type="image/png"
         href="{{ settings.favicon | image_url: width: 32, height: 32 }}"
       >
-    {%- endif -%}
+    {%- endif -%} 
+    
+    
+    {% include 'ymq-option-initializer' %}
+
+    {{ 'base.css' | asset_url | stylesheet_tag }}
+    
+  
+
+    
+
 
     {% comment %} This a way to wait for main content to load when navigating to a new page so that the view transitions can work consistently {% endcomment %}
     <link
@@ -22,6 +31,16 @@
       blocking="render"
       id="view-transition-render-blocker"
     >
+
+      <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-39V7KE3LRX"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-39V7KE3LRX');
+    </script>
 
     {%- render 'meta-tags' -%}
     {%- render 'fonts' -%}
@@ -46,7 +65,12 @@
     <script type="text/javascript" src="https://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
     <script type="text/javascript" src="https://kenwheeler.github.io/slick/slick/slick.js"></script>
     <!--  -->
-  </head>
+  <!--Gem_Page_Header_Script-->
+{% render 'gem-app-header-scripts' %}
+<!--End_Gem_Page_Header_Script-->
+
+  {% render 'shogun-head' %}
+</head>
 
   <body class="page-width-{{ settings.page_width }} card-hover-effect-{{ settings.card_hover_effect }}">
     {% render 'skip-to-content-link', href: '#MainContent', text: 'accessibility.skip_to_text' %}
@@ -78,6 +102,33 @@
     {% if settings.quick_add or settings.mobile_quick_add %}
       {% render 'quick-add-modal' %}
     {% endif %}
-  </body>
+  <!--Gem_Page_Footer_Script-->
+  {%- liquid
+    assign gpTemplateSuffix = template.suffix
+    assign arrSplitSuffix = gpTemplateSuffix | split: '-'
+    if gpTemplateSuffix contains 'gem-' and gpTemplateSuffix contains '-template' and arrSplitSuffix.size == 3
+      assign isV6GpTemplate = true
+    endif
+    assign gpShopMeta = shop.metafields.gempages
+    if gpShopMeta
+      if gpShopMeta['productV6-default'] == 'true' and request.page_type == 'product'
+        assign isProductDefault = true
+      endif
+      if gpShopMeta['collectionV6-default'] == 'true' and request.page_type == 'collection'
+        assign isCollectionDefault = true
+      endif
+      if gpShopMeta['indexV6-default'] == 'true' and request.page_type == 'index'
+        assign isIndexDefault = true
+      endif
+      if isProductDefault or isCollectionDefault or isIndexDefault or isPreviewV6
+        assign isV6GpTemplate = true
+      endif
+    endif
+  %}
+  {% if isV6GpTemplate %}
+    {% render 'gem-app-footer-scripts', GEM_FOOTER_SCRIPT: GEM_FOOTER_SCRIPT %}
+  {% endif %}
+<!--End_Gem_Page_Footer_Script-->
+</body>
   <script src="{{ 'custom.js' | asset_url }}" defer></script>
 </html>

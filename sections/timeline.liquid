@@ -537,6 +537,12 @@ File: sections/timeline.liquid
   .timeline-line {
     left: 40px;
   }
+  .timeline-header{
+    text-align:left
+  }
+  .timeline-subtitle {
+      width: 100%;
+  }
   
   .timeline-item {
     position: relative !important; /* Reset to relative on mobile */
@@ -546,7 +552,7 @@ File: sections/timeline.liquid
     width: 100% !important;
     justify-content: flex-start !important;
     text-align: left !important;
-    transform: translateX(50px) !important;
+    transform: translateX(0) !important;
     margin-bottom: 40px; /* Add bottom margin for mobile */
   }
   
@@ -593,7 +599,7 @@ File: sections/timeline.liquid
 
 @media (max-width: 480px) {
   .timeline-section {
-    padding: 60px 0;
+    padding: 0 0 60px 0;
   }
   
   .timeline-container {
@@ -614,7 +620,7 @@ File: sections/timeline.liquid
   }
   
   .timeline-dot {
-    left: 30px !important;
+    left: 32px !important;
   }
 }
 </style>

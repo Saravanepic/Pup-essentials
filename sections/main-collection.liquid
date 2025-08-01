@@ -53,9 +53,11 @@
     cursor:pointer;  
   }
 
-  .facets-block-wrapper--vertical {
+  @media screen and (min-width: 720px) {
+    .facets-block-wrapper--vertical {
       display: none;
     }
+  }
   
   .facets-block-wrapper--vertical.show {
     display: grid; /* or flex, grid, etc. */
@@ -116,7 +118,9 @@
       {% paginate collection.products by 48 %}
         {% capture children %}
           {% for product in collection.products %}
-          <li
+            
+          {% if product.id != 7701073166384 %} 
+            <li
             id="{{ section.id }}-{{ product.id }}"
             class="product-grid__item product-grid__item--{{ forloop.index0 }}"
             data-page="{{ paginate.current_page }}"
@@ -127,6 +131,11 @@
             {% content_for 'block', type: 'product-card', id: 'product-card', closest.product: product %}
             {% # theme-check-enable %}
           </li>
+            
+          {% endif %}
+           
+            
+          
         {% endfor %}
         {% endcapture %}
         {% render 'product-grid',
