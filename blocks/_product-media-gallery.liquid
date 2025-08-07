@@ -173,6 +173,7 @@
           pagination_position: pagination_position,
           default_slide_index: 1,
           aspect_ratio: block.settings.aspect_ratio
+          
         -%}
       {% endif %}
 
@@ -183,7 +184,8 @@
           item_count: sorted_media.size,
           controls_on_media: true,
           pagination_position: 'center',
-          default_slide_index: 1
+          default_slide_index: 1,
+          show_arrows:true
         -%}
       {% endif %}
     {% endcapture %}
@@ -425,7 +427,7 @@
     if([...colorValues, ...allColors].some(el => el.toLowerCase() == opt1.toLowerCase())){
       wearingThisColor = opt1
     }
-    if([...colorValues, ...allColors].some(el => el.toLowerCase() == opt2.toLowerCase())){
+    if(!wearingThisColor && [...colorValues, ...allColors].some(el => el.toLowerCase() == opt2.toLowerCase())){
       wearingThisColor = opt2
     }
     console.log("wearingThisColor :", wearingThisColor)

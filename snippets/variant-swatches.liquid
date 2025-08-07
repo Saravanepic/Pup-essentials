@@ -17,7 +17,7 @@
         {% continue %}
       {% endif %}
 
-      <fieldset class="variant-option variant-option--buttons variant-option--swatches">
+      <fieldset class="variant-option variant-option--buttons variant-option--swatches variant-option-custom">
         {% capture children %}
         {%- for product_option_value in product_option.values -%}
           {% liquid
@@ -62,11 +62,11 @@
             </label>
           </li>
         {%- endfor -%}
-        <li
+        {% comment %} <li
           slot="more"
           on:click="/showAllSwatches"
           class="hidden-swatches__count"
-        ></li>
+        ></li> {% endcomment %}
       {% endcapture %}
 
         {% render 'overflow-list', children: children, ref: 'overflowList', defer: true %}

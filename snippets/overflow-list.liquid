@@ -26,7 +26,7 @@
 
     <ul part="list">
       <slot></slot>
-      <slot
+      {% comment %} <slot
         name="more"
         part="more"
         hidden
@@ -45,7 +45,7 @@
             {{ 'actions.more' | t }}
           </button>
         </li>
-      </slot>
+      </slot> {% endcomment %}
       <li
         part="placeholder"
         hidden

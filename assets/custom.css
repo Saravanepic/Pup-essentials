@@ -40,6 +40,11 @@ html {
     font-stretch: normal
 }
 
+
+/* .cart-items__quantity_withaddon .quantity-selector button {
+    display: none;
+} */
+
 :root {
     --button-padding-inline: 48px;
     --button-padding-block: 10px;
@@ -194,9 +199,11 @@ cart-note {
 }
 
 /* Hide Slide Show */
-slideshow-controls[controls-on-media][pagination-position=center] {
+slideshow-controls[controls-on-media][pagination-position=center] .slideshow-controls__dots{
     display: none;
 }
+
+
 
 /*  */
 /* Header */
@@ -493,7 +500,14 @@ product-card:hover a.button_customize_card{
     text-transform: uppercase;
 }
 
+/*  */
+.quick-add-modal__content .product-information__media {
+    grid-column: 1 / 4!important;
+}
 
+.quick-add-modal__content .size-desc-tag {
+    display: none;
+}
 /* PDP */
 
 .product-information__grid .button[id^=BuyButtons-ProductSubmitButton-] {
@@ -642,7 +656,7 @@ product-card:hover a.button_customize_card{
 .label_wrapper.size_label  .size_info {
     font-family: 'GT America Trial';
     font-weight: 400;
-    font-size: 9px;
+    font-size: 11px;
     line-height: 15px;
     letter-spacing: 0;
     text-align: right;
@@ -838,14 +852,14 @@ a.button_custom {
     color: #C6A877;
 }
 .ymq_alert_box2 .ymq_img_alert {
-    width: 13px;
-    height: 11px;
+    width: 14px;
+    height: 12px;
 }
 
 .ymq_alert_box2 {
     font-family: 'GT America Trial';
     font-weight: 400;
-    font-size: 12px;
+    font-size: 11px;
     line-height: 15px;
     text-align: right;
     text-decoration: underline;
@@ -1023,6 +1037,24 @@ h2.jdgm-rev-widg__title {
 /* Responive */
 @media all and (max-width:767px){
 
+    span.swatch {
+        width: 15px;
+        height: 15px;
+    }
+
+
+    slideshow-controls[controls-on-media][pagination-position=center] {
+        position: relative;
+    }
+
+    .slideshow-controls__arrows button {
+        height: 20px;
+    }
+
+    .slideshow-controls__arrows {
+        height: 20px;
+    }
+
     /*  */
 .product-information__media {
     position: relative;
@@ -1045,7 +1077,8 @@ h2.jdgm-rev-widg__title {
 }
     /*  */
   li.handle_meet-the-founders,
-  li.handle_jean-jacket,li.handle_the-crewneck {
+  li.handle_jean-jacket,li.handle_the-crewneck ,
+  li.handle_the-oversized-denim-jacket{
     display: none!important;
   }
   .fullwidth-section .group-block {
@@ -1138,4 +1171,10 @@ h2.jdgm-rev-widg__title {
     left: 0;
     border-radius: 4px;
   }
+}
+
+
+div#shopify-section-template--16975532392496__faq_96K9wz {
+    padding-top: 100px;
+    margin-top: -100px;
 }

@@ -9,7 +9,9 @@
 %}
 {% if product.tags contains "add-tote-bag" and addon_prod != blank %}
 
-  <div class="addon_wraper" style="{% unless not_in_cart %}display:none;{% endunless %}">
+  {% comment %} <div class="addon_wraper" style="{% unless not_in_cart %}display:none;{% endunless %}"> {% endcomment %}
+   <div class="addon_wraper">
+    <a href="{{ addon_prod.url }}" target="_self" class="addon_overlay"></a>
     <div class="addon_img">
       <img src="{{ addon_prod.featured_image | img_url: 'master' }}" alt="{{ addon_prod.title }}" class="img-fluid"/>
     </div>
@@ -21,15 +23,18 @@
         Add a free tote with the same design.
       </p>
       <span class="price">
-        {{ addon_prod.price | money_without_trailing_zeros | remove: '.00' }} value
+
+         {{ addon_prod.compare_at_price | money_without_trailing_zeros | remove: '.00' }} value
+         {% comment %} $79 value {% endcomment %}
+        {% comment %} {{ addon_prod.price | money_without_trailing_zeros | remove: '.00' }} value {% endcomment %}
       </span>
     </div>
-    <div class="addon_checkbox">
+    {% comment %} <div class="addon_checkbox">
       <label class="container">
         <input id="addon-prod" type="checkbox">
         <span class="checkmark"></span>
       </label>
-    </div>
+    </div> {% endcomment %}
   </div>
 <div>
   
@@ -37,6 +42,7 @@
 
 
 <style>
+
   .addon_wraper {
     display: flex;
     align-items: center;
@@ -45,6 +51,15 @@
     padding: 11px 20px;
     border-radius: 8px;
     gap: 14px;
+    position: relative;
+}
+
+a.addon_overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
 }
 
 .addon_img img {
@@ -216,7 +231,8 @@
     if(show){
       wrapper.style.display = 'flex'
     } else {
-      wrapper.style.display = 'none'
+      {% comment %} wrapper.style.display = 'none' {% endcomment %}
+       wrapper.style.display = 'flex'
     }
   }
 
